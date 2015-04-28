@@ -1,0 +1,433 @@
+/* The CSS for the table was based of an example at wc3 schools.  
+http://www.w3schools.com/css/tryit.asp?filename=trycss_table_fancy 
+*/  
+table.listing   
+{  
+    font-family: Arial, Helvetica, sans-serif;  
+    width:80%;  
+    border-collapse:collapse;  
+}  
+
+
+.listing td, th   
+{  
+    font-size:1em;  
+    border:1px solid #98bf21;  
+    padding:3px 7px 2px 7px;  
+}  
+
+.listing th  
+{  
+    font-size:1.1em;  
+    text-align:left;  
+    padding-top:5px;  
+    padding-bottom:4px;  
+    background-color:#A7C942;  
+    color:#ffffff;  
+}  
+
+.listing tr.alt td   
+{  
+    color:#000000;  
+    background-color:#EAF2D3;  
+}  
+
+
+/* unvisited link */  
+a:link   
+{  
+    text-decoration:none;  
+    color:#000000;   
+}  
+
+/* visited link */  
+a:visited   
+{  
+    text-decoration:none;   
+    color: #707070 ;  
+}  
+
+a:hover {text-decoration:underline;}   /* mouse over link */  
+a:active {text-decoration:underline;}  /* selected link */  
+
+/* The CSS for the form was taken from this project.  
+https://github.com/pmcelhaney/semantic-form.css/blob/master/index.html 
+*/  
+
+form.semantic {  
+    width:70%;  
+}  
+
+form.semantic fieldset  
+{  
+    clear: both;  
+    margin: 1em 0 0 0;  
+    padding: 10px;  
+    overflow: auto;  
+    background-color: #f8f8f8;  
+    border: 1px solid #888;  
+}  
+
+form.semantic legend  
+{  
+    font-weight: bold;  
+}  
+
+form.semantic div  
+{  
+    clear: both;  
+    margin: 0;  
+    padding: 0.5em 0 0 0;  
+    overflow: visible;  
+}  
+
+
+form.semantic label   
+{  
+    display: block;  
+    float: left;  
+    width: 120px;  
+    text-align: right;  
+    padding: 2px 1ex 6px 0;  
+    vertical-align: baseline;  
+}  
+
+form.semantic label.after   
+{  
+    width: auto;  
+    text-align: left;   
+    display: inline;   
+    float: none;  
+}  
+
+form.semantic label.long   
+{  
+    clear: both;  
+    width: auto;  
+    text-align: left;  
+    float: none;  
+}  
+
+form.semantic input  
+, form.semantic select  
+, form.semantic textarea  
+{  
+    float: left;  
+}  
+
+form.semantic input.date {  
+    width : 100px;  
+}  
+
+
+form.semantic input.money {  
+    width : 100px;  
+}  
+
+form.semantic input[type=radio]  
+, form.semantic input[type=checkbox]  
+{  
+    vertical-align: text-bottom;  
+}  
+
+form.semantic ul {  
+    list-style-type: none;   
+    float: left;  
+    padding: 0;  
+    margin: 0;  
+}  
+
+form.semantic li {  
+    clear: both;  
+    padding: 0.2em 0;  
+}  
+
+form.semantic li label {  
+    width: auto;  
+    text-align: left;  
+    padding: 0;  
+}     
+
+form.semantic div.field-row   
+{  
+    clear: none;  
+    float: left;  
+    margin: 0;  
+    padding: 0;  
+    overflow: visible;  
+}  
+
+form.semantic div.field-row *  
+{  
+    float: none;  
+    display: inline;  
+}  
+
+form.semantic .button-row  
+{  
+    text-align: right;  
+}  
+
+form.semantic .button-row input  
+{  
+    float: none;  
+}  
+
+form.semantic div.long label   
+{  
+    width: auto;  
+    text-align: left;    
+    float: none;  
+}  
+
+form.semantic div.long textarea   
+{  
+    width: 100%;  
+}  
+
+/* Errors -- for use with JQuery Validate, etc. */  
+
+form.semantic input.error  
+, form.semantic select.error  
+, form.semantic textarea.error  
+{  
+    background-color: #77002a;  
+    color: white;  
+}                                                  
+
+form.semantic label.error  
+{  
+    width: auto;  
+    color: #77002a;  
+    text-align: left;  
+}         
+
+/* from caucho.com */  
+#footer hr  
+{  
+    width: 100%;  
+}  
+#footer  
+{  
+    font-size: 80%;  
+    text-align: left;  
+}  
+
+/* bottom nav */  
+
+.bottom {  
+    font-family: Verdana, Helvetica, Arial, sans-serif;  
+    font-size : 90%;  
+    color : #999;  
+}  
+
+ul.bottom {  
+    list-style-type : none;  
+    padding : 0em;  
+    margin : 0;  
+    margin-top : 3em;  
+    text-align : left;  
+}  
+
+.bottom li {  
+    display : inline;  
+    margin : 0.1em 0.1em;  
+    padding : 0.0em;  
+}  
+
+.bottom a {  
+    color : #999;  
+}  
+
+.bottom a:hover {  
+    color : #ffcc33;  
+}  
+
+/* bottom */  
+
+.about {  
+    color : #999;  
+    font-family : Helvetica, Arial, sans-serif;  
+    text-align : left;  
+    font-size : 90%;  
+}  
+
+div.about {  
+    margin-top : 1em;  
+}
+
+/*.vertical_menu {
+    float: left;
+    width: 90px;
+    border: 1px dotted blue;
+    background-color: #EEFFFF;
+    padding: 5px;
+    margin: 5px;
+}
+.vertical_menu li {
+    list-style: none;
+    margin: 5px;
+}
+.vertical_menu li a {
+    text-decoration: none;
+    color: black;
+}
+.vertical_menu li a:hover {
+    text-decoration: underline;
+}
+
+.erreur{
+    color: #f00;
+}*/
+
+#cssmenu,
+#cssmenu ul,
+#cssmenu ul li,
+#cssmenu ul ul {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+#cssmenu ul {
+    position: relative;
+    z-index: 597;
+    float: left;
+}
+#cssmenu ul li {
+    float: left;
+    min-height: 1px;
+    line-height: 1em;
+    vertical-align: middle;
+}
+#cssmenu ul li.hover,
+#cssmenu ul li:hover {
+    position: relative;
+    z-index: 599;
+    cursor: default;
+}
+#cssmenu ul ul {
+    margin-top: 1px;
+    visibility: hidden;
+    position: absolute;
+    top: 1px;
+    left: 99%;
+    z-index: 598;
+    width: 100%;
+}
+#cssmenu ul ul li {
+    float: none;
+}
+#cssmenu ul ul ul {
+    top: 1px;
+    left: 99%;
+}
+#cssmenu ul li:hover > ul {
+    visibility: visible;
+}
+#cssmenu ul li {
+    float: none;
+}
+#cssmenu ul ul li {
+    font-weight: normal;
+}
+/* Custom CSS Styles */
+#cssmenu {
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    width: 200px;
+}
+#cssmenu ul a,
+#cssmenu ul a:link,
+#cssmenu ul a:visited {
+    display: block;
+    color: #848889;
+    text-decoration: none;
+    font-weight: 300;
+}
+#cssmenu > ul {
+    float: none;
+}
+#cssmenu ul {
+    background: #fff;
+}
+#cssmenu > ul > li {
+    border-left: 3px solid #d7d8da;
+}
+#cssmenu > ul > li > a {
+    padding: 10px 20px;
+}
+#cssmenu > ul > li:hover {
+    border-left: 3px solid #3dbd99;
+}
+#cssmenu ul li:hover > a {
+    color: #3dbd99;
+}
+#cssmenu > ul > li:hover {
+    background: #f6f6f6;
+}
+/* Sub Menu */
+#cssmenu ul ul a:link,
+#cssmenu ul ul a:visited {
+    font-weight: 400;
+    font-size: 14px;
+}
+#cssmenu ul ul {
+    width: 180px;
+    background: none;
+    border-left: 20px solid transparent;
+}
+#cssmenu ul ul a {
+    padding: 8px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+#cssmenu ul ul li {
+    padding: 0 20px;
+    background: #fff;
+}
+#cssmenu ul ul li:last-child {
+    border-bottom: 3px solid #d7d8da;
+    padding-bottom: 10px;
+}
+#cssmenu ul ul li:first-child {
+    padding-top: 10px;
+}
+#cssmenu ul ul li:last-child > a {
+    border-bottom: none;
+}
+#cssmenu ul ul li:first-child:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: -20px;
+    top: 13px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid #fff;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+}
+
+input:invalid
+{
+    background-color:pink;
+}
+input:valid
+{
+    border:2px solid green;
+}
+
+/*input:focus {
+    width:200px;
+}*/
+input{
+   transition:all 2s;
+}
+
+form  {display: table;}
+p     {display: table-row;}
+label {display: table-cell;}
+input {display: table-cell;}
+
