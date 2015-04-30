@@ -164,7 +164,7 @@ public class ServletUsers extends HttpServlet
 		request.setAttribute("listeDesUsers", liste);
 		System.out.println("après le set Attribute");
 		forwardTo = "index.jsp?action=listerLesUtilisateurs";
-		
+		System.out.println("après forwardTo");
 		message = "Liste des utilisateurs";
 	    }
 
