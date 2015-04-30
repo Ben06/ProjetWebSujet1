@@ -6,6 +6,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utilisateurs.gestionnaires.GestionnaireUtilisateurs;
+import utilisateurs.modeles.Adresse;
 import utilisateurs.modeles.ConnexionForm;
 import utilisateurs.modeles.Utilisateur;
 
@@ -132,6 +134,11 @@ public class ServletUsers extends HttpServlet
 	    else if (action.equals("creerUtilisateursDeTest"))
 	    {
 		gestionnaireUtilisateurs.creerUtilisateursDeTest();
+		Adresse a = new Adresse("1", "2", "3", "4");
+		ArrayList<Adresse>listeA=new ArrayList<Adresse>();
+		listeA.add(a);
+		gestionnaireUtilisateurs.creeUtilisateur("yo", "yolo", "yoloe", "yoloswag", listeA);
+		gestionnaireUtilisateurs.getAllUsers();
 		nbMaxPageFloat = (float) gestionnaireUtilisateurs.getAllUsers().size() / 10;
 		nbMaxPageInt = gestionnaireUtilisateurs.getAllUsers().size() / 10;
 		if (nbMaxPageFloat != nbMaxPageInt)

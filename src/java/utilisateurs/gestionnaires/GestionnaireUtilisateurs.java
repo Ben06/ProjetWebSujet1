@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import utilisateurs.modeles.Adresse;
 import utilisateurs.modeles.Utilisateur;
 
 @Stateless
@@ -18,7 +19,6 @@ public class GestionnaireUtilisateurs
     @PersistenceContext
     private EntityManager em;
 
-    
     public void creerUtilisateursDeTest()
     {
 	creeUtilisateur("John", "Lennon", "jlennon");
@@ -66,10 +66,21 @@ public class GestionnaireUtilisateurs
     public Utilisateur creeUtilisateur(String prenom, String nom, String login, String password)
     {
 	System.out.println("Création de l'utilisateur");
-	System.out.println("prenom : "+prenom+" nom :"+nom+" login : "+login+" password : "+password);
+	System.out.println("prenom : " + prenom + " nom :" + nom + " login : " + login + " password : " + password);
 	Utilisateur u = new Utilisateur(login, nom, prenom, password);
-	System.out.println("utilisateur crée u : "+u.getLogin());
-	System.out.println("user null ? : "+u.getPassword());
+	System.out.println("utilisateur crée u : " + u.getLogin());
+	System.out.println("user null ? : " + u.getPassword());
+	em.persist(u);
+	return u;
+    }
+
+    public Utilisateur creeUtilisateur(String prenom, String nom, String login, String password, ArrayList<Adresse>liste)
+    {
+	System.out.println("Création de l'utilisateur");
+	System.out.println("prenom : " + prenom + " nom :" + nom + " login : " + login + " password : " + password);
+	Utilisateur u = new Utilisateur(login, nom, prenom, password, liste);
+	System.out.println("utilisateur crée u : " + u.getLogin());
+	System.out.println("user null ? : " + u.getPassword());
 	em.persist(u);
 	return u;
     }
@@ -81,8 +92,14 @@ public class GestionnaireUtilisateurs
 //    }
     public Collection<Utilisateur> getAllUsers()
     {
+	System.out.println("dans le get All Users");
 	// Exécution d'une requête équivalente à un select *  
 	Query q = em.createQuery("select u from Utilisateur u");
+	for (Object o : q.getResultList())
+	{
+	   Utilisateur u = (Utilisateur)o;
+	    System.out.println(u.getFirstname()+" "+u.getListeAdresses().get(0));
+	}
 	return q.getResultList();
     }
 

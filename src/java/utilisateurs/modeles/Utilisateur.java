@@ -6,6 +6,7 @@
 package utilisateurs.modeles;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,7 +27,8 @@ public class Utilisateur implements Serializable
     private String firstname;
     private String lastname;
     private String login;
-    private String password="toto";
+    private String password = "toto";
+    private ArrayList<Adresse> listeAdresses = new ArrayList<Adresse>();
 
     public Utilisateur()
     {
@@ -45,6 +47,20 @@ public class Utilisateur implements Serializable
 	this.lastname = lastname;
 	this.firstname = firstname;
 	this.password = pass;
+    }
+
+    public Utilisateur(final String login, final String lastname, final String firstname, final String pass, final ArrayList<Adresse> listeAdr)
+    {
+	this.login = login;
+	this.lastname = lastname;
+	this.firstname = firstname;
+	this.password = pass;
+	this.listeAdresses = listeAdr;
+    }
+
+    public ArrayList<Adresse> getListeAdresses()
+    {
+	return listeAdresses;
     }
 
     public String getPassword()
