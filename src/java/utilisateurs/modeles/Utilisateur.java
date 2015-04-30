@@ -7,10 +7,14 @@ package utilisateurs.modeles;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -28,7 +32,32 @@ public class Utilisateur implements Serializable
     private String lastname;
     private String login;
     private String password = "toto";
-    private ArrayList<Adresse> listeAdresses = new ArrayList<Adresse>();
+    private String picturePath;
+    private Collection<Contact> contacts;
+
+    @OneToMany(cascade =
+    {
+	CascadeType.ALL
+    }, fetch = FetchType.EAGER)
+    public Collection<Contact> getContacts()
+    {
+	return contacts;
+    }
+
+    public void setContacts(Collection<Contact> contacts)
+    {
+	this.contacts = contacts;
+    }
+
+    public String getPicturePath()
+    {
+	return picturePath;
+    }
+
+    public void setPicturePath(String picturePath)
+    {
+	this.picturePath = picturePath;
+    }
 
     public Utilisateur()
     {
@@ -49,18 +78,25 @@ public class Utilisateur implements Serializable
 	this.password = pass;
     }
 
-    public Utilisateur(final String login, final String lastname, final String firstname, final String pass, final ArrayList<Adresse> listeAdr)
+    public Utilisateur(final String login, final String lastname, final String firstname, final String pass, final String path)
     {
 	this.login = login;
 	this.lastname = lastname;
 	this.firstname = firstname;
 	this.password = pass;
-	this.listeAdresses = listeAdr;
+	this.picturePath = path;
     }
 
-    public ArrayList<Adresse> getListeAdresses()
+    public Utilisateur(final String login, final String lastname, final String firstname, final String pass, final String path, ArrayList<Contact> contact)
     {
-	return listeAdresses;
+	this.login = login;
+	this.lastname = lastname;
+	this.firstname = firstname;
+	this.password = pass;
+	this.picturePath = path;
+	this.contacts = new ArrayList<Contact>();
+	this.contacts = contact;
+
     }
 
     public String getPassword()

@@ -6,7 +6,9 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+/*import java.net.URL;
+import java.nio.file.Path;
+import java.util.ArrayList;*/
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utilisateurs.gestionnaires.GestionnaireUtilisateurs;
-import utilisateurs.modeles.Adresse;
 import utilisateurs.modeles.ConnexionForm;
+import utilisateurs.modeles.Contact;
 import utilisateurs.modeles.Utilisateur;
 
 /**
@@ -67,7 +69,7 @@ public class ServletUsers extends HttpServlet
 	String message = "";
 
 	System.out.println("get : action : " + action);
-	
+
 	// génération du nombre de page totale
 	float nbMaxPageFloat = (float) gestionnaireUtilisateurs.getAllUsers().size() / 10;
 	int nbMaxPageInt = gestionnaireUtilisateurs.getAllUsers().size() / 10;
@@ -85,7 +87,7 @@ public class ServletUsers extends HttpServlet
 	    nbMaxPage = nbMaxPageInt;
 	}
 	///////////////////////////////////////////////
-	
+
 	if (action != null)
 	{
 	    if (action.equals("Next"))
@@ -120,9 +122,10 @@ public class ServletUsers extends HttpServlet
 
 	    if (action.equals("listerLesUtilisateurs"))
 	    {
+		System.out.println("dans le listerUtilisateur");
 		System.out.println("dans le listerlesUtilisateurs, page : " + page);
 //		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
-		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getTenUsers(page);
+		Collection<Contact> liste = gestionnaireUtilisateurs.getTenContacts(page);
 		if (liste.size() == 0)
 		{
 		    liste = null;
@@ -133,14 +136,16 @@ public class ServletUsers extends HttpServlet
 	    }
 	    else if (action.equals("creerUtilisateursDeTest"))
 	    {
-		gestionnaireUtilisateurs.creerUtilisateursDeTest();
-		Adresse a = new Adresse("1", "2", "3", "4");
-		ArrayList<Adresse>listeA=new ArrayList<Adresse>();
-		listeA.add(a);
-		gestionnaireUtilisateurs.creeUtilisateur("yo", "yolo", "yoloe", "yoloswag", listeA);
-		gestionnaireUtilisateurs.getAllUsers();
-		nbMaxPageFloat = (float) gestionnaireUtilisateurs.getAllUsers().size() / 10;
-		nbMaxPageInt = gestionnaireUtilisateurs.getAllUsers().size() / 10;
+//		gestionnaireUtilisateurs.creerUtilisateursDeTest();
+		gestionnaireUtilisateurs.creerContactDeTest();
+//		gestionnaireUtilisateurs.getAllUsers();
+		gestionnaireUtilisateurs.getAllContact();
+		
+		System.out.println("après le premier all contact");
+		nbMaxPageFloat = (float) gestionnaireUtilisateurs.getAllContact().size()/10;
+		System.out.println("après le nbMaxPageFloat");
+		nbMaxPageInt = gestionnaireUtilisateurs.getAllContact().size()/10;
+		System.out.println("après le nbMaxPageInt");
 		if (nbMaxPageFloat != nbMaxPageInt)
 		{
 		    if (nbMaxPageFloat > nbMaxPageInt)
@@ -152,9 +157,14 @@ public class ServletUsers extends HttpServlet
 		{
 		    nbMaxPage = nbMaxPageInt;
 		}
-		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getTenUsers(page);
+		
+		System.out.println("avant ten contacts");
+		Collection<Contact> liste = gestionnaireUtilisateurs.getTenContacts(page);
+		System.out.println("après ten contacts");
 		request.setAttribute("listeDesUsers", liste);
+		System.out.println("après le set Attribute");
 		forwardTo = "index.jsp?action=listerLesUtilisateurs";
+		
 		message = "Liste des utilisateurs";
 	    }
 
@@ -189,7 +199,6 @@ public class ServletUsers extends HttpServlet
 	    /////////////////////////////////////////////////////////////////////////////
 	    ///////////////////////GESTION DES ERREURS//////////////////////////////////
 	    ////////////////////////////////////////////////////////////////////////////
-	    
 	    else if (action.equals("erreurCreationUtilisateur"))
 	    {
 		request.setAttribute("erreurs", erreurs);
@@ -224,7 +233,12 @@ public class ServletUsers extends HttpServlet
 	    ///////////////////////////////////////////////////////////////////////////////
 	    /////////////////// REDIRECTION VERS D'AUTRES ACTIONS /////////////////////////
 	    //////////////////////////////////////////////////////////////////////////////
-	    
+	    else if (action.equals("ajouterUnePhoto"))
+	    {
+		System.out.println("l'utilisateur va maintenant pouvoir s'inscrire...");
+		forwardTo = "index.jsp?action=ajouterUnePhoto";
+	    }
+
 	    else if (action.equals("inscrireUtilisateur"))
 	    {
 		System.out.println("l'utilisateur va maintenant pouvoir s'inscrire...");
@@ -302,12 +316,12 @@ public class ServletUsers extends HttpServlet
 	String prenom = request.getParameter("prenom");
 	String login = request.getParameter("login");
 	String password = request.getParameter("motdepasse");
+//	String actionMultipart = getParamFromMultipartRequest(request, "action");
 	String redirectTo = "";
 //	System.out.println("post : action : " + action);
 //	request.get
 
 	// Mise à jour d'un utilisateur 
-	
 	if (action.equals("updateUtilisateur"))
 	{
 	    erreurs.clear();
@@ -358,9 +372,7 @@ public class ServletUsers extends HttpServlet
 //	    System.out.println("on est dans le if du post");
 	}
 
-	
 	// suppression d'un utilisateur
-	
 	else if (action.equals("deleteUtilisateur"))
 	{
 	    erreurs.clear();
@@ -429,12 +441,10 @@ public class ServletUsers extends HttpServlet
 		redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
 	    }
 	}
-	
-	
+
 	////////////////////////////////////////////////////////////////////////
 	////////////////////// CONNEXION ET INSCRIPTION ////////////////////////
 	////////////////////////////////////////////////////////////////////////
-	
 	else if (action.equals("connexion"))
 	{
 	    erreurs.clear();
@@ -573,6 +583,7 @@ public class ServletUsers extends HttpServlet
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *

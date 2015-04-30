@@ -226,9 +226,26 @@
                     <li><a href="ServletUsers?action=mettreajourUtilisateur">Update</a></li>
                     <li><a href="ServletUsers?action=supprimerUtilisateur">Delete</a></li>
                     <li><a href="ServletUsers?action=creerUtilisateursDeTest">Test</a></li>
+                    <li><a href="ServletUsers?action=ajouterUnePhoto">ajout de photo</a></li>
                     <!--<li><a href="ServletUsers?action=supprimerAll">Delete All</a></li>-->
                 </ul> 
             </div>
+
+            <c:if test="${param.action == 'ajouterUnePhoto'}">
+                <form action="ServletUsers" method="post" enctype="multipart/form-data">
+                    <fieldset>
+                        <legend>Envoi de fichier</legend>
+
+                        <label for="fichier">Emplacement du fichier <span class="requis">*</span></label>
+                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/>
+                        <br />
+
+                        <input type="hidden" name="action" value="ajoutDePhoto"/> 
+                        <input type="submit" value="Envoyer" class="sansLabel" />
+                        <br />                
+                    </fieldset>
+                </form>
+            </c:if>
             <!--</div>-->
             <!--</div>-->
             <c:if test="${param.action == 'creationUtilisateur'}">
@@ -426,9 +443,10 @@
                     <table border="10">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
-                            <td><b>Login</b></td>  
+                            <!--<td><b>Login</b></td>-->  
                             <td><b>Nom</b></td>  
-                            <td><b>Prénom</b></td>  
+                            <td><b>Prénom</b></td> 
+                            <td><b>Photo</b></td>
                         </tr>  
 
                         <!-- Ici on affiche les lignes, une par utilisateur -->  
@@ -437,9 +455,24 @@
                         <c:set var="page" value="0"/>
                         <c:forEach var="u" items="${requestScope['listeDesUsers']}"> 
                             <tr>
-                                <td>${u.login}</td>  
+                                <!--<td>${u.login}</td>-->  
                                 <td>${u.lastname}</td>  
                                 <td>${u.firstname}</td>
+                                <c:if test="${!empty u.pictureName}">
+                                    <td><img src="resources/files/${u.pictureName}" alt="Smiley face" height="42" width="42"></td>
+                                </c:if>
+                                <c:if test="${empty u.pictureName}">
+                                    <td>
+                                        <form action="Upload" method="post" enctype="multipart/form-data">
+                                            <!--<label for="fichier">Emplacement du fichier <span class="requis">*</span></label>-->
+                                            <input type="file" name="fichier" accept="image/*"/>
+                                            <!--<input type="hidden" name="utilisateur" value="${u.login}"/>-->
+                                            <input type="hidden" name="action" value="ajoutDePhoto"/>
+                                            
+                                            <input type="submit" value="Ajouter Une Photo" class="sansLabel" />
+                                        </form>
+                                    </td>
+                                </c:if>
                                 <!-- On compte le nombre de users -->  
                                 <c:set var="total" value="${total+1}"/>  
                             </tr>
@@ -485,7 +518,7 @@
                     <table border="10">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
-                            <td><b>Login</b></td>  
+                            <!--<td><b>Login</b></td>-->  
                             <td><b>Nom</b></td>  
                             <td><b>Prénom</b></td>  
                         </tr>  
@@ -496,7 +529,7 @@
 
                         <c:forEach var="u" items="${requestScope['listeDesUsers']}">  
                             <tr>  
-                                <td>${u.login}</td>  
+                                <!--<td>${u.login}</td>-->  
                                 <td>${u.lastname}</td>  
                                 <td>${u.firstname}</td>  
                                 <!-- On compte le nombre de users -->  

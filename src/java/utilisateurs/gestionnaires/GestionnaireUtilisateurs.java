@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import utilisateurs.modeles.Adresse;
+import utilisateurs.modeles.Contact;
 import utilisateurs.modeles.Utilisateur;
 
 @Stateless
@@ -18,6 +18,28 @@ public class GestionnaireUtilisateurs
     // à partir du contenu de persistence.xml  
     @PersistenceContext
     private EntityManager em;
+
+    public void creerContactDeTest()
+    {
+	System.out.println("creation des contacts de test");
+	Collection<Contact> contacts = new ArrayList<>();
+
+	contacts.add(creerContact("John", "Lennon", ""));
+	contacts.add(creerContact("Paul", "Mac Cartney", ""));
+	contacts.add(creerContact("Ringo", "Starr", ""));
+
+	System.out.println("ajout des contacts à l'utilisateur");
+	creerUtilisateur("yo", "fdp", "nigga", "lol", "Hearthstone_Screenshot_12.26.2014.23.17.04.png", contacts);
+    }
+
+    public Contact creerContact(String nom, String prenom, String pictureName)
+    {
+	System.out.println("creation d'un contact");
+	Contact c = new Contact(nom, prenom, pictureName);
+	System.out.println("avan le em.persist(c)");
+	em.persist(c);
+	return c;
+    }
 
     public void creerUtilisateursDeTest()
     {
@@ -74,11 +96,23 @@ public class GestionnaireUtilisateurs
 	return u;
     }
 
-    public Utilisateur creeUtilisateur(String prenom, String nom, String login, String password, ArrayList<Adresse>liste)
+    public Utilisateur creeUtilisateur(String prenom, String nom, String login, String password, String path)
     {
 	System.out.println("Création de l'utilisateur");
 	System.out.println("prenom : " + prenom + " nom :" + nom + " login : " + login + " password : " + password);
-	Utilisateur u = new Utilisateur(login, nom, prenom, password, liste);
+	Utilisateur u = new Utilisateur(login, nom, prenom, password, path);
+	System.out.println("utilisateur crée u : " + u.getLogin());
+	System.out.println("user null ? : " + u.getPassword());
+	em.persist(u);
+	return u;
+    }
+
+    public Utilisateur creerUtilisateur(String prenom, String nom, String login, String password, String path, Collection<Contact> contacts)
+    {
+	System.out.println("Création de l'utilisateur");
+	System.out.println("prenom : " + prenom + " nom :" + nom + " login : " + login + " password : " + password);
+	Utilisateur u = new Utilisateur(login, nom, prenom, password, path);
+	u.setContacts(contacts);
 	System.out.println("utilisateur crée u : " + u.getLogin());
 	System.out.println("user null ? : " + u.getPassword());
 	em.persist(u);
@@ -95,10 +129,18 @@ public class GestionnaireUtilisateurs
 	System.out.println("dans le get All Users");
 	// Exécution d'une requête équivalente à un select *  
 	Query q = em.createQuery("select u from Utilisateur u");
+	return q.getResultList();
+    }
+
+    public Collection<Utilisateur> getAllContact()
+    {
+	System.out.println("dans le get All contact");
+	// Exécution d'une requête équivalente à un select *  
+	Query q = em.createQuery("select c from Contact c");
 	for (Object o : q.getResultList())
 	{
-	   Utilisateur u = (Utilisateur)o;
-	    System.out.println(u.getFirstname()+" "+u.getListeAdresses().get(0));
+	    Contact c = (Contact) o;
+	    System.out.println("contact : nom :" + c.getFirstname());
 	}
 	return q.getResultList();
     }
@@ -127,8 +169,30 @@ public class GestionnaireUtilisateurs
 	    System.out.println("i : " + i);
 	    if (i >= pageNumber * 10 && i < (pageNumber + 1) * 10)
 	    {
-		System.out.println("u : " + u.getLogin());
+		System.out.println("u : " + u.getLogin() + " photo :" + u.getPicturePath());
 		liste10.add(u);
+	    }
+	    i++;
+	}
+	return liste10;
+    }
+
+    public Collection<Contact> getTenContacts(int pageNumber)
+    {
+	// Exécution d'une requête équivalente à un select *  
+	System.out.println("numero de page : " + pageNumber);
+	Query q = em.createQuery("select c from Contact c");
+//	int pageNumberInt = Integer.parseInt(pageNumber);
+	Collection<Contact> liste = q.getResultList();
+	Collection<Contact> liste10 = new ArrayList<Contact>();
+	int i = 0;
+	for (Contact c : liste)
+	{
+	    System.out.println("i : " + i);
+	    if (i >= pageNumber * 10 && i < (pageNumber + 1) * 10)
+	    {
+		System.out.println("c : " + c.getFirstname()+ " photo du contact :" + c.getPictureName());
+		liste10.add(c);
 	    }
 	    i++;
 	}
@@ -213,6 +277,21 @@ public class GestionnaireUtilisateurs
 	catch (IllegalArgumentException e)
 	{
 	    return false;
+	}
+    }
+
+    public void ajouterPhoto(String login, String path)
+    {
+	Utilisateur u = null;
+
+	if (login != "")
+	{
+	    u = getSingleUserByLogin(login);
+	}
+
+	if (path != "" && u != null)
+	{
+	    u.setPicturePath(path);
 	}
     }
 }
