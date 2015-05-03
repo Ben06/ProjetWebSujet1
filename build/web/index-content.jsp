@@ -222,7 +222,7 @@
                     <li><a href="ServletUsers?action=listerLesUtilisateurs">Refresh</a></li>
                     <li><a href="ServletUsers?action=creationUtilisateur">Create</a></li>
                     <li><a href="ServletUsers?action=rechercheUtilisateur">Search</a></li>
-                    <li><a href="ServletUsers?action=mettreajourUtilisateur">Update</a></li>
+                    <!--<li><a href="ServletUsers?action=mettreajourUtilisateur">Update</a></li>-->
                     <li><a href="ServletUsers?action=creerUtilisateursDeTest">Test</a></li>
                     <!--<li><a href="ServletUsers?action=supprimerAll">Delete All</a></li>-->
                 </ul> 
