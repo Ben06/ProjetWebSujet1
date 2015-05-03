@@ -7,8 +7,8 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 /*import java.net.URL;
-import java.nio.file.Path;
-import java.util.ArrayList;*/
+ import java.nio.file.Path;
+ import java.util.ArrayList;*/
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import utilisateurs.gestionnaires.GestionnaireContacts;
 import utilisateurs.gestionnaires.GestionnaireUtilisateurs;
 import utilisateurs.modeles.ConnexionForm;
 import utilisateurs.modeles.Contact;
@@ -35,6 +36,9 @@ import utilisateurs.modeles.Utilisateur;
 })
 public class ServletUsers extends HttpServlet
 {
+
+    @EJB
+    private GestionnaireContacts gestionnaireContacts;
 
     public static final String ATT_USER = "utilisateur";
     public static final String ATT_FORM = "form";
@@ -59,11 +63,24 @@ public class ServletUsers extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException
     {
+	HttpSession session = request.getSession();
+	Object current = session.getAttribute("sessionUtilisateur");
+
+	Utilisateur currentUser = (Utilisateur) current;
+	if (currentUser != null)
+	{
+	    System.out.println("session : " + currentUser.getId());
+	}
 	// Pratique pour décider de l'action à faire  
 	String action = request.getParameter("action");
 	String nom = request.getParameter("nom");
 	String prenom = request.getParameter("prenom");
 	String login = request.getParameter("login");
+	String search = request.getParameter("search");
+	String contact = request.getParameter("contact");
+	String option = request.getParameter("option");
+	String contactNom = request.getParameter("contactNom");
+	String contactPrenom = request.getParameter("contactPrenom");
 
 	String forwardTo = "";
 	String message = "";
@@ -93,59 +110,10 @@ public class ServletUsers extends HttpServlet
 	    if (action.equals("Next"))
 	    {
 		page++;
-		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getTenUsers(page);
-		request.setAttribute("listeDesUsers", liste);
-		forwardTo = "index.jsp?action=listerLesUtilisateurs";
-//		message = String.valueOf(page);
-	    }
+		nbMaxPageFloat = (float) gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		nbMaxPageInt = gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		nbMaxPage = 0;
 
-	    if (action.equals("Previous"))
-	    {
-		page--;
-		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getTenUsers(page);
-		request.setAttribute("listeDesUsers", liste);
-		forwardTo = "index.jsp?action=listerLesUtilisateurs";
-//		message = message = String.valueOf(page);
-	    }
-	    if (action.equals("chercherParLogin"))
-	    {
-		erreurs.clear();
-		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getUser(login);
-
-		if (liste.size() == 0)
-		{
-		    liste = null;
-		}
-		request.setAttribute("listeDesUsers", liste);
-		forwardTo = "index.jsp?action=chercherParLogin";
-	    }
-
-	    if (action.equals("listerLesUtilisateurs"))
-	    {
-		System.out.println("dans le listerUtilisateur");
-		System.out.println("dans le listerlesUtilisateurs, page : " + page);
-//		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
-		Collection<Contact> liste = gestionnaireUtilisateurs.getTenContacts(page);
-		if (liste.size() == 0)
-		{
-		    liste = null;
-		}
-		request.setAttribute("listeDesUsers", liste);
-		forwardTo = "index.jsp?action=listerLesUtilisateurs";
-		message = "Liste des utilisateurs";
-	    }
-	    else if (action.equals("creerUtilisateursDeTest"))
-	    {
-//		gestionnaireUtilisateurs.creerUtilisateursDeTest();
-		gestionnaireUtilisateurs.creerContactDeTest();
-//		gestionnaireUtilisateurs.getAllUsers();
-		gestionnaireUtilisateurs.getAllContact();
-		
-		System.out.println("après le premier all contact");
-		nbMaxPageFloat = (float) gestionnaireUtilisateurs.getAllContact().size()/10;
-		System.out.println("après le nbMaxPageFloat");
-		nbMaxPageInt = gestionnaireUtilisateurs.getAllContact().size()/10;
-		System.out.println("après le nbMaxPageInt");
 		if (nbMaxPageFloat != nbMaxPageInt)
 		{
 		    if (nbMaxPageFloat > nbMaxPageInt)
@@ -157,9 +125,112 @@ public class ServletUsers extends HttpServlet
 		{
 		    nbMaxPage = nbMaxPageInt;
 		}
-		
+		Collection<Contact> liste = gestionnaireContacts.getTenContacts(page, currentUser);
+		request.setAttribute("listeDesUsers", liste);
+		forwardTo = "index.jsp?action=listerLesUtilisateurs";
+//		message = String.valueOf(page);
+	    }
+
+	    if (action.equals("Previous"))
+	    {
+		page--;
+		nbMaxPageFloat = (float) gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		nbMaxPageInt = gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		nbMaxPage = 0;
+
+		if (nbMaxPageFloat != nbMaxPageInt)
+		{
+		    if (nbMaxPageFloat > nbMaxPageInt)
+		    {
+			nbMaxPage = nbMaxPageInt + 1;
+		    }
+		}
+		else
+		{
+		    nbMaxPage = nbMaxPageInt;
+		}
+		Collection<Contact> liste = gestionnaireContacts.getTenContacts(page, currentUser);
+		request.setAttribute("listeDesUsers", liste);
+		forwardTo = "index.jsp?action=listerLesUtilisateurs";
+//		message = message = String.valueOf(page);
+	    }
+
+	    /////////////////////////////////////////////////////////////////////////
+	    //////////////////////// UTILISATEURS (versions précédentes) ///////////
+	    ////////////////////////////////////////////////////////////////////////
+	    if (action.equals("chercherParLogin"))
+	    {
+		System.out.println("option : " + option);
+		erreurs.clear();
+		Collection<Contact> liste = gestionnaireContacts.getContact(currentUser, search, option);
+
+		if (liste.size() == 0)
+		{
+		    liste = null;
+		}
+		request.setAttribute("listeDesUsers", liste);
+		forwardTo = "index.jsp?action=chercherParLogin";
+	    }
+//
+	    if (action.equals("listerLesUtilisateurs"))
+	    {
+		nbMaxPageFloat = (float) gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		nbMaxPageInt = gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		nbMaxPage = 0;
+
+		if (nbMaxPageFloat != nbMaxPageInt)
+		{
+		    if (nbMaxPageFloat > nbMaxPageInt)
+		    {
+			nbMaxPage = nbMaxPageInt + 1;
+		    }
+		}
+		else
+		{
+		    nbMaxPage = nbMaxPageInt;
+		}
+
+		System.out.println("dans le listerUtilisateur");
+		System.out.println("dans le listerlesUtilisateurs, page : " + page + "nbPage ? " + nbMaxPage);
+//		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
+		Collection<Contact> liste = gestionnaireContacts.getTenContacts(page, currentUser);
+		if (liste.size() == 0)
+		{
+		    liste = null;
+		}
+		request.setAttribute("listeDesUsers", liste);
+		forwardTo = "index.jsp?action=listerLesUtilisateurs";
+		message = "Liste des utilisateurs";
+	    }
+	    else if (action.equals("creerUtilisateursDeTest"))
+	    {
+		Collection<Contact> contacts = gestionnaireContacts.creerContactDeTest();
+//		gestionnaireUtilisateurs.getAllUsers();
+//		Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);
+		for (Contact c : contacts)
+		{
+		    Contact contactTest = new Contact(c.getFirstname(), c.getLastname());
+		    gestionnaireUtilisateurs.addContact(currentUser, contactTest);
+		}
+		System.out.println("après le premier all contact");
+		nbMaxPageFloat = (float) gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		System.out.println("après le nbMaxPageFloat : " + nbMaxPageFloat);
+		nbMaxPageInt = gestionnaireContacts.getAllContact(currentUser).size() / 10;
+		System.out.println("après le nbMaxPageInt : " + nbMaxPageInt);
+		if (nbMaxPageFloat != nbMaxPageInt)
+		{
+		    if (nbMaxPageFloat > nbMaxPageInt)
+		    {
+			nbMaxPage = nbMaxPageInt + 1;
+		    }
+		}
+		else
+		{
+		    nbMaxPage = nbMaxPageInt;
+		}
+
 		System.out.println("avant ten contacts");
-		Collection<Contact> liste = gestionnaireUtilisateurs.getTenContacts(page);
+		Collection<Contact> liste = gestionnaireContacts.getTenContacts(page, currentUser);
 		System.out.println("après ten contacts");
 		request.setAttribute("listeDesUsers", liste);
 		System.out.println("après le set Attribute");
@@ -167,15 +238,15 @@ public class ServletUsers extends HttpServlet
 		System.out.println("après forwardTo");
 		message = "Liste des utilisateurs";
 	    }
-
-	    else if (action.equals("deleteAllUsers"))
-	    {
-		System.out.println("supprimons tous les users !!!!");
-		gestionnaireUtilisateurs.deleteAllUser();
-		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getTenUsers(page);
-		request.setAttribute("listeDesUsers", liste);
-		forwardTo = "index.jsp?action=allUsersDeleted";
-	    }
+//
+//	    else if (action.equals("deleteAllUsers"))
+//	    {
+//		System.out.println("supprimons tous les users !!!!");
+//		gestionnaireUtilisateurs.deleteAllUser();
+//		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getTenUsers(page);
+//		request.setAttribute("listeDesUsers", liste);
+//		forwardTo = "index.jsp?action=allUsersDeleted";
+//	    }
 	    else if (action.equals("deleteAllUsersConfirmation"))
 	    {
 		System.out.println("confirmation de suppression");
@@ -233,10 +304,35 @@ public class ServletUsers extends HttpServlet
 	    ///////////////////////////////////////////////////////////////////////////////
 	    /////////////////// REDIRECTION VERS D'AUTRES ACTIONS /////////////////////////
 	    //////////////////////////////////////////////////////////////////////////////
+	    else if (action.equals("photoAjoute"))
+	    {
+		forwardTo = "index.jsp?action=photoAjoute";
+	    }
+
+	    else if (action.equals("modification"))
+	    {
+//		Contact toDelete = gestionnaireContacts.getSingleContactByID(currentUser, contact);
+		System.out.println("modification du contact d'id : " + contact);
+		forwardTo = "index.jsp?action=modification&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+	    }
+
+	    else if (action.equals("suppression"))
+	    {
+//		Contact toDelete = gestionnaireContacts.getSingleContactByID(currentUser, contact);
+		System.out.println("suppression du contact d'id : " + contact);
+		forwardTo = "index.jsp?action=suppression&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+	    }
+
+	    else if (action.equals("modifierPhoto"))
+	    {
+		System.out.println("l'utilisateur va maintenant pouvoir modifier une photo au contact d'id : " + contact);
+		forwardTo = "index.jsp?action=modifierPhoto&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+	    }
+
 	    else if (action.equals("ajouterUnePhoto"))
 	    {
-		System.out.println("l'utilisateur va maintenant pouvoir s'inscrire...");
-		forwardTo = "index.jsp?action=ajouterUnePhoto";
+		System.out.println("l'utilisateur va maintenant pouvoir ajouter une photo au contact d'id : " + contact);
+		forwardTo = "index.jsp?action=ajouterUnePhoto&contactID=" + contact;
 	    }
 
 	    else if (action.equals("inscrireUtilisateur"))
@@ -316,71 +412,29 @@ public class ServletUsers extends HttpServlet
 	String prenom = request.getParameter("prenom");
 	String login = request.getParameter("login");
 	String password = request.getParameter("motdepasse");
+	String contact = request.getParameter("contact");
+
 //	String actionMultipart = getParamFromMultipartRequest(request, "action");
 	String redirectTo = "";
 //	System.out.println("post : action : " + action);
 //	request.get
-
-	// Mise à jour d'un utilisateur 
-	if (action.equals("updateUtilisateur"))
+	HttpSession session = request.getSession();
+	Object current = session.getAttribute("sessionUtilisateur");
+	Utilisateur currentUser = (Utilisateur) current;
+	System.out.println("action post : " + action);
+	if (currentUser != null)
 	{
-	    erreurs.clear();
-	    if (nom.length() != 0)
-	    {
-		if (prenom.length() != 0)
-		{
-		    if (login.length() != 0)
-		    {
-//			System.out.println("création de l'utilisateur");
-			erreurs.clear();
-			boolean res = gestionnaireUtilisateurs.updateUser(login, nom, prenom);
-			redirectTo = "ServletUsers?action=utilisateurMisAJour";
-		    }
-		    else
-		    {
-			erreurs.put("login", "Veuillez entrer un login.");
-			redirectTo = "ServletUsers?action=erreurMettreAJourUtilisateur";
-		    }
-		}
-		else
-		{
-		    System.out.println("pas de prenom");
-		    erreurs.put("prenom", "Veuillez entrer un prenom.");
-		    if (login.length() == 0)
-		    {
-			erreurs.put("login", "Veuillez entrer un login.");
-		    }
-		    redirectTo = "ServletUsers?action=erreurMettreAJourUtilisateur";
-		}
-	    }
-	    else
-	    {
-		System.out.println("pas de login");
-		erreurs.put("nom", "Veuillez entrer un nom");
-
-		if (prenom.length() == 0)
-		{
-		    erreurs.put("prenom", "Veuillez entrer un prenom.");
-		}
-		if (login.length() == 0)
-		{
-		    erreurs.put("login", "Veuillez entrer un login.");
-		}
-
-		redirectTo = "ServletUsers?action=erreurMettreAJourUtilisateur";
-	    }
-//	    System.out.println("on est dans le if du post");
+	    System.out.println("session : " + currentUser.getId());
 	}
 
-	// suppression d'un utilisateur
-	else if (action.equals("deleteUtilisateur"))
+	if (action.equals("deleteUtilisateur"))
 	{
 	    erreurs.clear();
-	    if (login.length() != 0)
+	    if (contact.length() != 0)
 	    {
-		boolean result = gestionnaireUtilisateurs.deleteUser(login);
-		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
-		request.setAttribute("listeDesUsers", liste);
+		System.out.println("début de la suppresion (avant la méthode) contact : " + contact);
+		boolean result = gestionnaireContacts.deleteContact(currentUser, contact);
+		System.out.println("result : " + result);
 		redirectTo = "ServletUsers?action=utilisateurSupprime";
 	    }
 	    else
@@ -390,56 +444,79 @@ public class ServletUsers extends HttpServlet
 	    }
 	}
 
+	if (action.equals("updateUtilisateur"))
+	{
+
+	    boolean res = gestionnaireContacts.updateContact(currentUser, contact, nom, prenom);
+	    redirectTo = "ServletUsers?action=utilisateurMisAJour";
+
+//	    System.out.println("on est dans le if du post");
+	}
+
+//	else if (action.equals("creerUnUtilisateur"))
+//	{
+//	    erreurs.clear();
+////	    System.out.println("nom : "+nom+" prenom : "+prenom+" login : "+login);
+//	    if (nom.length() != 0)
+//	    {
+//		if (prenom.length() != 0)
+//		{
+//		    if (login.length() != 0)
+//		    {
+//			System.out.println("création de l'utilisateur");
+//			erreurs.clear();
+//			gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login);
+//			Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
+//			request.setAttribute("listeDesUsers", liste);
+//			redirectTo = "ServletUsers?action=utilisateurCree";
+//		    }
+//		    else
+//		    {
+//			erreurs.put("login", "Veuillez entrer un login.");
+//			redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
+//		    }
+//		}
+//		else
+//		{
+//		    System.out.println("pas de prenom");
+//		    erreurs.put("prenom", "Veuillez entrer un prenom.");
+//		    if (login.length() == 0)
+//		    {
+//			erreurs.put("login", "Veuillez entrer un login.");
+//		    }
+//		    redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
+//		}
+//	    }
+//	    else
+//	    {
+//		System.out.println("pas de login");
+//		erreurs.put("nom", "Veuillez entrer un nom");
+//
+//		if (prenom.length() == 0)
+//		{
+//		    erreurs.put("prenom", "Veuillez entrer un prenom.");
+//		}
+//		if (login.length() == 0)
+//		{
+//		    erreurs.put("login", "Veuillez entrer un login.");
+//		}
+//
+//		redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
+//	    }
+//	}
+	// création d'un contact
 	else if (action.equals("creerUnUtilisateur"))
 	{
-	    erreurs.clear();
-//	    System.out.println("nom : "+nom+" prenom : "+prenom+" login : "+login);
-	    if (nom.length() != 0)
+	    System.out.println("dans le créerUnContact");
+	    Contact c = new Contact(nom, prenom);
+	    gestionnaireUtilisateurs.addContact(currentUser, c);
+	    System.out.println("done");
+	    Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);
+	    for (Contact c1 : contacts)
 	    {
-		if (prenom.length() != 0)
-		{
-		    if (login.length() != 0)
-		    {
-			System.out.println("création de l'utilisateur");
-			erreurs.clear();
-			gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login);
-			Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
-			request.setAttribute("listeDesUsers", liste);
-			redirectTo = "ServletUsers?action=utilisateurCree";
-		    }
-		    else
-		    {
-			erreurs.put("login", "Veuillez entrer un login.");
-			redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
-		    }
-		}
-		else
-		{
-		    System.out.println("pas de prenom");
-		    erreurs.put("prenom", "Veuillez entrer un prenom.");
-		    if (login.length() == 0)
-		    {
-			erreurs.put("login", "Veuillez entrer un login.");
-		    }
-		    redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
-		}
+		System.out.println("c : " + c1.getFirstname() + " pour l'user: " + currentUser.getLogin());
 	    }
-	    else
-	    {
-		System.out.println("pas de login");
-		erreurs.put("nom", "Veuillez entrer un nom");
-
-		if (prenom.length() == 0)
-		{
-		    erreurs.put("prenom", "Veuillez entrer un prenom.");
-		}
-		if (login.length() == 0)
-		{
-		    erreurs.put("login", "Veuillez entrer un login.");
-		}
-
-		redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
-	    }
+	    redirectTo = "ServletUsers?action=utilisateurCree";
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -474,8 +551,8 @@ public class ServletUsers extends HttpServlet
 			}
 			else if (password.equals(u.getPassword()))
 			{
-			    HttpSession session = request.getSession();
-			    session.setAttribute(ATT_SESSION_USER, u);
+			    HttpSession session1 = request.getSession();
+			    session1.setAttribute(ATT_SESSION_USER, u);
 			    redirectTo = "ServletUsers?action=userConnecte";
 			}
 			else
@@ -488,21 +565,48 @@ public class ServletUsers extends HttpServlet
 		}
 		else
 		{
-		    erreurs.put("wronglogin", "Veuillez rentrer un login existant.");
-		    if (password.length() == 0)
+		    if (liste.size() > 1)
 		    {
-			erreurs.put("password", "Veuillez rentrer un mot de passe.");
+			for (Utilisateur u : liste)
+			{
+			    if (password.length() == 0)
+			    {
+				erreurs.put("password", "Veuillez rentrer un mot de passe.");
+				redirectTo = "ServletUsers?action=erreurConnexion";
+			    }
+			    else if (password.equals(u.getPassword()))
+			    {
+				HttpSession session1 = request.getSession();
+				session1.setAttribute(ATT_SESSION_USER, u);
+				redirectTo = "ServletUsers?action=userConnecte";
+			    }
+			    else
+			    {
+				erreurs.put("wrongpass", "Mauvais mot de passe");
+//			    System.out.println("erreurs 3 : "+erreurs.get("wrongpass"));
+				redirectTo = "ServletUsers?action=erreurConnexion";
+			    }
+			}
 		    }
-		    System.out.println("erreurs 2 : " + erreurs.get("wronglogin"));
-		    redirectTo = "ServletUsers?action=erreurConnexion";
+		    else
+		    {
+			erreurs.put("wronglogin", "Veuillez rentrer un login existant.");
+			if (password.length() == 0)
+			{
+			    erreurs.put("password", "Veuillez rentrer un mot de passe.");
+			}
+			System.out.println("erreurs 2 : " + erreurs.get("wronglogin"));
+			redirectTo = "ServletUsers?action=erreurConnexion";
+		    }
 		}
 	    }
+//	    gestionnaireUtilisateurs.addContactest();
 	}
 	else if (action.equals("Deconnexion"))
 	{
 	    System.out.println("déconnexion en cours...");
-	    HttpSession session = request.getSession();
-	    session.invalidate();
+	    HttpSession session1 = request.getSession();
+	    session1.invalidate();
 	    redirectTo = "ServletUsers?action=userDeconnecte";
 
 	}
@@ -518,8 +622,16 @@ public class ServletUsers extends HttpServlet
 		    {
 			if (password.length() != 0)
 			{
-			    Utilisateur u = gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login, password);
-			    redirectTo = "ServletUsers?action=utilisateurInscrit";
+			    if (gestionnaireUtilisateurs.getUser(login).size() != 0)
+			    {
+				erreurs.put("login", "Veuillez choisir un login non existant");
+				redirectTo = "ServletUsers?action=erreurInscription";
+			    }
+			    else
+			    {
+				Utilisateur u = gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login, password);
+				redirectTo = "ServletUsers?action=utilisateurInscrit";
+			    }
 			}
 			else
 			{
@@ -583,7 +695,6 @@ public class ServletUsers extends HttpServlet
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-
     /**
      * Handles the HTTP <code>GET</code> method.
      *

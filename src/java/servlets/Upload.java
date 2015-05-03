@@ -16,8 +16,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import utilisateurs.gestionnaires.GestionnaireContacts;
 import utilisateurs.gestionnaires.GestionnaireUtilisateurs;
+import utilisateurs.modeles.Utilisateur;
 
 /**
  *
@@ -31,6 +34,9 @@ import utilisateurs.gestionnaires.GestionnaireUtilisateurs;
 @MultipartConfig(location = "C:\\Users\\Divz\\Documents\\NetBeansProjects\\TP2\\web\\resources\\files", fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class Upload extends HttpServlet
 {
+
+    @EJB
+    private GestionnaireContacts gestionnaireContacts;
     @EJB
     private GestionnaireUtilisateurs gestionnaireUtilisateurs;
 
@@ -90,14 +96,21 @@ public class Upload extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException
     {
-	String redirectTo ="";
+	String redirectTo = "";
 	String actionMultipart = getParamFromMultipartRequest(request, "action");
+	HttpSession session = request.getSession();
+	Object current = session.getAttribute("sessionUtilisateur");
+	Utilisateur currentUser = (Utilisateur) current;
+	if (currentUser != null)
+	{
+	    System.out.println("Upload : session : " + currentUser.getId());
+	}
 
 	if (actionMultipart.equals("ajoutDePhoto"))
 	{
 	    System.out.println("dans ajout photo");
 	    response.setContentType("text/html");
-	    String utilisateur = getParamFromMultipartRequest(request, "utilisateur");
+	    String contact = getParamFromMultipartRequest(request, "contact");
 	    PrintWriter out = response.getWriter();
 	    Collection<Part> parts = request.getParts();
 	    for (Part part : parts)
@@ -111,16 +124,16 @@ public class Upload extends HttpServlet
 			part.write(part.getSubmittedFileName());
 			String picName = part.getSubmittedFileName();
 
-			gestionnaireUtilisateurs.ajouterPhoto(utilisateur, picName);
+			gestionnaireContacts.ajouterPhoto(currentUser, contact, picName);
 
-			System.out.println("photo ajouté à l'utilisateur " + utilisateur);
+			System.out.println("photo ajouté à l'utilisateur d'id " + contact);
 
-			redirectTo = "index.jsp?action=listerLesUtilisateurs";
+			redirectTo = "index.jsp?action=photoAjoute";
 		    }
 		    else
 		    {
 			System.out.println("pas une photo");
-			redirectTo = "index.jsp?action=rechercheUtilisateur";
+			redirectTo = "index.jsp?action=erreurAjoutPhoto";
 		    }
 		}
 	    }

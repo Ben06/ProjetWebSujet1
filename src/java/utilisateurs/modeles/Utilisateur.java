@@ -8,6 +8,8 @@ package utilisateurs.modeles;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,21 +26,25 @@ import javax.persistence.OneToMany;
 public class Utilisateur implements Serializable
 {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String firstname;
     private String lastname;
     private String login;
     private String password = "toto";
     private String picturePath;
-    private Collection<Contact> contacts;
 
     @OneToMany(cascade =
     {
 	CascadeType.ALL
     }, fetch = FetchType.EAGER)
+    private Collection<Contact> contacts;
+
+//    @OneToMany(cascade =
+//    {
+//	CascadeType.PERSIST
+//    }, fetch = FetchType.EAGER)
     public Collection<Contact> getContacts()
     {
 	return contacts;
@@ -68,6 +74,7 @@ public class Utilisateur implements Serializable
 	this.login = login;
 	this.lastname = lastname;
 	this.firstname = firstname;
+	this.contacts = new ArrayList<>();
     }
 
     public Utilisateur(final String login, final String lastname, final String firstname, final String pass)
@@ -76,6 +83,7 @@ public class Utilisateur implements Serializable
 	this.lastname = lastname;
 	this.firstname = firstname;
 	this.password = pass;
+	this.contacts = new ArrayList<>();
     }
 
     public Utilisateur(final String login, final String lastname, final String firstname, final String pass, final String path)
@@ -85,6 +93,7 @@ public class Utilisateur implements Serializable
 	this.firstname = firstname;
 	this.password = pass;
 	this.picturePath = path;
+	this.contacts = new ArrayList<>();
     }
 
     public Utilisateur(final String login, final String lastname, final String firstname, final String pass, final String path, ArrayList<Contact> contact)
@@ -94,7 +103,6 @@ public class Utilisateur implements Serializable
 	this.firstname = firstname;
 	this.password = pass;
 	this.picturePath = path;
-	this.contacts = new ArrayList<Contact>();
 	this.contacts = contact;
 
     }
@@ -139,6 +147,7 @@ public class Utilisateur implements Serializable
 	this.login = login;
     }
 
+    @Id
     public int getId()
     {
 	return id;

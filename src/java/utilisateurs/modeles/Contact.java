@@ -6,10 +6,15 @@
 package utilisateurs.modeles;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -18,28 +23,42 @@ import javax.persistence.Id;
 @Entity
 public class Contact implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+
+//    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
+
     private String firstname;
 
     private String lastname;
 
     private String pictureName;
 
-    
-    public Contact(){
-	
+//    @ManyToOne(cascade =
+//    {
+//	CascadeType.ALL
+//    }, fetch = FetchType.EAGER)
+//    private Utilisateur utilisateur;
+
+    public Contact()
+    {
+
     }
-    
+
+    public Contact(String firstname, String lastname)
+    {
+	this.firstname = firstname;
+	this.lastname = lastname;
+    }
+
     public Contact(String firstname, String lastname, String pictureName)
     {
 	this.firstname = firstname;
 	this.lastname = lastname;
 	this.pictureName = pictureName;
     }
+
     /**
      * Get the value of pictureName
      *
@@ -60,7 +79,6 @@ public class Contact implements Serializable
 	this.pictureName = pictureName;
     }
 
-    
     /**
      * Get the value of lastname
      *
@@ -119,6 +137,16 @@ public class Contact implements Serializable
 	return hash;
     }
 
+//    public Utilisateur getUtilisateur()
+//    {
+//	return utilisateur;
+//    }
+//
+//    public void setUtilisateur(Utilisateur utilisateur)
+//    {
+//	this.utilisateur = utilisateur;
+//    }
+
     @Override
     public boolean equals(Object object)
     {
@@ -140,5 +168,5 @@ public class Contact implements Serializable
     {
 	return "utilisateurs.modeles.Contacts[ id=" + id + " ]";
     }
-    
+
 }
