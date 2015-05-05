@@ -133,7 +133,7 @@ public class Upload extends HttpServlet
 		    else
 		    {
 			System.out.println("pas une photo");
-			redirectTo = "index.jsp?action=erreurAjoutPhoto";
+			redirectTo = "index.jsp?action=ajouterUnePhoto&erreurPhoto=Veuillez selectionner une photo";
 		    }
 		}
 	    }

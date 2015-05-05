@@ -6,6 +6,8 @@
 package utilisateurs.modeles;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,11 +37,22 @@ public class Contact implements Serializable
 
     private String pictureName;
 
+    @OneToMany(cascade =
+    {
+	CascadeType.ALL
+    }, fetch = FetchType.EAGER)
+    private Collection<Telephone> numeros;
+
+    @OneToMany(cascade =
+    {
+	CascadeType.ALL
+    }, fetch = FetchType.EAGER)
+    private Collection<Adresse> adresses;
 //    @ManyToOne(cascade =
 //    {
 //	CascadeType.ALL
 //    }, fetch = FetchType.EAGER)
-//    private Utilisateur utilisateur;
+////    private Utilisateur utilisateur;
 
     public Contact()
     {
@@ -50,6 +63,8 @@ public class Contact implements Serializable
     {
 	this.firstname = firstname;
 	this.lastname = lastname;
+	this.numeros = new ArrayList<>();
+	this.adresses = new ArrayList<>();
     }
 
     public Contact(String firstname, String lastname, String pictureName)
@@ -57,6 +72,38 @@ public class Contact implements Serializable
 	this.firstname = firstname;
 	this.lastname = lastname;
 	this.pictureName = pictureName;
+	this.numeros = new ArrayList<>();
+	this.adresses = new ArrayList<>();
+    }
+
+//    public Collection<Telephone> getNumeros()
+//    {
+//	return numeros;
+//    }
+//
+//    public void setNumeros(Collection<Telephone> numeros)
+//    {
+//	this.numeros = numeros;
+//    }
+
+    public Collection<Adresse> getAdresses()
+    {
+	return adresses;
+    }
+
+    public void setAdresses(Collection<Adresse> adresses)
+    {
+	this.adresses = adresses;
+    }
+
+    public Collection<Telephone> getPhone()
+    {
+	return this.numeros;
+    }
+
+    public void setPhone(Collection<Telephone> numeros)
+    {
+	this.numeros = numeros;
     }
 
     /**
@@ -146,7 +193,6 @@ public class Contact implements Serializable
 //    {
 //	this.utilisateur = utilisateur;
 //    }
-
     @Override
     public boolean equals(Object object)
     {

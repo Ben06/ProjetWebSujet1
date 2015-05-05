@@ -236,7 +236,6 @@ public class GestionnaireUtilisateurs
 	
 	em.persist(u);
 	System.out.println("contact ajouté!");
-
     }
 
 //    public void addContactest()

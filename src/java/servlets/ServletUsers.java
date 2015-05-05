@@ -20,10 +20,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import utilisateurs.gestionnaires.GestionnaireAdresses;
 import utilisateurs.gestionnaires.GestionnaireContacts;
+import utilisateurs.gestionnaires.GestionnaireTelephones;
 import utilisateurs.gestionnaires.GestionnaireUtilisateurs;
+import utilisateurs.modeles.Adresse;
 import utilisateurs.modeles.ConnexionForm;
 import utilisateurs.modeles.Contact;
+import utilisateurs.modeles.Telephone;
 import utilisateurs.modeles.Utilisateur;
 
 /**
@@ -36,6 +40,12 @@ import utilisateurs.modeles.Utilisateur;
 })
 public class ServletUsers extends HttpServlet
 {
+
+    @EJB
+    private GestionnaireAdresses gestionnaireAdresses;
+
+    @EJB
+    private GestionnaireTelephones gestionnaireTelephones;
 
     @EJB
     private GestionnaireContacts gestionnaireContacts;
@@ -81,7 +91,8 @@ public class ServletUsers extends HttpServlet
 	String option = request.getParameter("option");
 	String contactNom = request.getParameter("contactNom");
 	String contactPrenom = request.getParameter("contactPrenom");
-
+	String erreurPhoto = request.getParameter("erreurPhoto");
+	
 	String forwardTo = "";
 	String message = "";
 
@@ -190,15 +201,45 @@ public class ServletUsers extends HttpServlet
 		    nbMaxPage = nbMaxPageInt;
 		}
 
-		System.out.println("dans le listerUtilisateur");
-		System.out.println("dans le listerlesUtilisateurs, page : " + page + "nbPage ? " + nbMaxPage);
+//		System.out.println("dans le listerUtilisateur");
+//		System.out.println("dans le listerlesUtilisateurs, page : " + page + "nbPage ? " + nbMaxPage);
 //		Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
 		Collection<Contact> liste = gestionnaireContacts.getTenContacts(page, currentUser);
 		if (liste.size() == 0)
 		{
 		    liste = null;
 		}
+		else
+		{
+		    int i = 0;
+		    for (Contact c : liste)
+		    {
+			Collection<Telephone> tel = c.getPhone();
+			Collection<Adresse> adr = c.getAdresses();
+//			Map<String, String> phones = new HashMap<>();
+
+//			for (Telephone t : tel)
+//			{
+//			    phones.put(Integer.toString(c.getId()), t.getNumero());
+//			} 
+			if (adr.size() == 0)
+			{
+			    System.out.println("liste null pour le contact : " + c.getFirstname());
+			    adr = null;
+			}
+			if (tel.size() == 0)
+			{
+			    System.out.println("liste null pour le contact : " + c.getFirstname());
+			    tel = null;
+			}
+
+			request.setAttribute("phonesOf" + c.getId(), tel);
+			request.setAttribute("adressesOf" + c.getId(), adr);
+
+		    }
+		}
 		request.setAttribute("listeDesUsers", liste);
+//		request.setAttribute("lis", current);
 		forwardTo = "index.jsp?action=listerLesUtilisateurs";
 		message = "Liste des utilisateurs";
 	    }
@@ -209,14 +250,26 @@ public class ServletUsers extends HttpServlet
 //		Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);
 		for (Contact c : contacts)
 		{
+
 		    Contact contactTest = new Contact(c.getFirstname(), c.getLastname());
+//		    Telephone tel = gestionnaireTelephones.creerTelephone("0493099894");
+//		    Telephone telTest = new Telephone(tel.getNumero());
+//		    gestionnaireContacts.ajouterNumero(currentUser, contactTest, telTest);
+//		    System.out.println("numero du contact : taille de la liste de contact : "+contactTest.getPhone().size());
+//		    for (Telephone t : contactTest.getPhone())
+//		    {
+//			System.out.println("=> "+t.getNumero());
+//		    }
+//		    System.out.println("Numéro ajouté au contact, ajout du contact à l'utilisateur");
 		    gestionnaireUtilisateurs.addContact(currentUser, contactTest);
 		}
-		System.out.println("après le premier all contact");
+//		System.out.println("après le premier all contact");
 		nbMaxPageFloat = (float) gestionnaireContacts.getAllContact(currentUser).size() / 10;
-		System.out.println("après le nbMaxPageFloat : " + nbMaxPageFloat);
+//		System.out.println("après le nbMaxPageFloat : " + nbMaxPageFloat);
 		nbMaxPageInt = gestionnaireContacts.getAllContact(currentUser).size() / 10;
-		System.out.println("après le nbMaxPageInt : " + nbMaxPageInt);
+//		System.out.println("après le nbMaxPageInt : " + nbMaxPageInt);
+
+//		System.out.println("liste des telephones ");
 		if (nbMaxPageFloat != nbMaxPageInt)
 		{
 		    if (nbMaxPageFloat > nbMaxPageInt)
@@ -229,13 +282,13 @@ public class ServletUsers extends HttpServlet
 		    nbMaxPage = nbMaxPageInt;
 		}
 
-		System.out.println("avant ten contacts");
+//		System.out.println("avant ten contacts");
 		Collection<Contact> liste = gestionnaireContacts.getTenContacts(page, currentUser);
-		System.out.println("après ten contacts");
+//		System.out.println("après ten contacts");
 		request.setAttribute("listeDesUsers", liste);
-		System.out.println("après le set Attribute");
+//		System.out.println("après le set Attribute");
 		forwardTo = "index.jsp?action=listerLesUtilisateurs";
-		System.out.println("après forwardTo");
+//		System.out.println("après forwardTo");
 		message = "Liste des utilisateurs";
 	    }
 //
@@ -300,10 +353,54 @@ public class ServletUsers extends HttpServlet
 		request.setAttribute("erreurs", erreurs);
 		forwardTo = "index.jsp?action=erreurConnexion";
 	    }
-
 	    ///////////////////////////////////////////////////////////////////////////////
 	    /////////////////// REDIRECTION VERS D'AUTRES ACTIONS /////////////////////////
 	    //////////////////////////////////////////////////////////////////////////////
+
+	    else if (action.equals("erreurMiseAJour"))
+	    {
+		forwardTo = "index.jsp?action=telephoneSupprime";
+	    }
+
+	    else if (action.equals("supprimerUneAdresse"))
+	    {
+		Collection<Contact> contacts = gestionnaireContacts.getContactByID(currentUser, contact);
+		for (Contact c : contacts)
+		{
+		    request.setAttribute("adressesList", c.getAdresses());
+		}
+		forwardTo = "index.jsp?action=supprimerUneAdresse&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+	    }
+
+	    else if (action.equals("telephoneSupprime"))
+	    {
+		forwardTo = "index.jsp?action=telephoneSupprime";
+	    }
+
+	    else if (action.equals("adresseSupprimee"))
+	    {
+		forwardTo = "index.jsp?action=telephoneSupprimee";
+	    }
+
+	    else if (action.equals("supprimerUnNumero"))
+	    {
+		Collection<Contact> contacts = gestionnaireContacts.getContactByID(currentUser, contact);
+		for (Contact c : contacts)
+		{
+		    request.setAttribute("phonesList", c.getPhone());
+		}
+		forwardTo = "index.jsp?action=supprimerUnNumero&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+	    }
+
+	    else if (action.equals("numeroAjoute"))
+	    {
+		forwardTo = "index.jsp?action=numeroAjoute";
+	    }
+
+	    else if (action.equals("ajouterUnNumero"))
+	    {
+		forwardTo = "index.jsp?action=ajouterUnNumero&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+	    }
 	    else if (action.equals("photoAjoute"))
 	    {
 		forwardTo = "index.jsp?action=photoAjoute";
@@ -313,6 +410,17 @@ public class ServletUsers extends HttpServlet
 	    {
 //		Contact toDelete = gestionnaireContacts.getSingleContactByID(currentUser, contact);
 		System.out.println("modification du contact d'id : " + contact);
+		Collection<Contact> contacts = currentUser.getContacts();
+		for (Contact c : contacts)
+		{
+		    Collection<Telephone> tels = c.getPhone();
+		    Collection<Adresse> adr = c.getAdresses();
+
+		    request.setAttribute("adressesList", adr);
+		    request.setAttribute("phonesList", tels);
+		}
+
+		request.setAttribute("erreurs", erreurs);
 		forwardTo = "index.jsp?action=modification&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
 	    }
 
@@ -325,12 +433,16 @@ public class ServletUsers extends HttpServlet
 
 	    else if (action.equals("modifierPhoto"))
 	    {
+		request.setAttribute("erreurs", erreurs);
 		System.out.println("l'utilisateur va maintenant pouvoir modifier une photo au contact d'id : " + contact);
 		forwardTo = "index.jsp?action=modifierPhoto&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
 	    }
 
 	    else if (action.equals("ajouterUnePhoto"))
 	    {
+		erreurs.clear();
+		erreurs.put("photo", erreurPhoto);
+		request.setAttribute("erreurs", erreurs);
 		System.out.println("l'utilisateur va maintenant pouvoir ajouter une photo au contact d'id : " + contact);
 		forwardTo = "index.jsp?action=ajouterUnePhoto&contactID=" + contact;
 	    }
@@ -413,7 +525,12 @@ public class ServletUsers extends HttpServlet
 	String login = request.getParameter("login");
 	String password = request.getParameter("motdepasse");
 	String contact = request.getParameter("contact");
-
+	String numero = request.getParameter("numero");
+	String nomRue = request.getParameter("nomRue");
+	String codePostal = request.getParameter("codePostal");
+	String nomVille = request.getParameter("nomVille");
+	String adresse = request.getParameter("adresse");
+	String telephone = request.getParameter("telephone");
 //	String actionMultipart = getParamFromMultipartRequest(request, "action");
 	String redirectTo = "";
 //	System.out.println("post : action : " + action);
@@ -422,6 +539,7 @@ public class ServletUsers extends HttpServlet
 	Object current = session.getAttribute("sessionUtilisateur");
 	Utilisateur currentUser = (Utilisateur) current;
 	System.out.println("action post : " + action);
+	System.out.println("contact dans le post : " + contact);
 	if (currentUser != null)
 	{
 	    System.out.println("session : " + currentUser.getId());
@@ -443,12 +561,83 @@ public class ServletUsers extends HttpServlet
 		redirectTo = "ServletUsers?action=erreurSupprimerUtilisateur";
 	    }
 	}
-
 	if (action.equals("updateUtilisateur"))
 	{
+	    System.out.println("numero de tel dans le update : "+numero+", length : "+numero.length());
+	    erreurs.clear();
+	    if (numero.length() != 10 && numero.length()!=0)
+	    {
+		erreurs.put("numero", "Veuillez entrer un numéro de telephone correct");
+		request.setAttribute("erreurs", erreurs);
+		redirectTo = "ServletUsers?action=modification&contact="+contact;
+	    }
+	    else
+	    {
+		boolean res = gestionnaireContacts.updateContact(currentUser, contact, nom, prenom, adresse, telephone, nomRue, nomVille, codePostal, numero);
+		if (res)
+		{
+		    redirectTo = "ServletUsers?action=utilisateurMisAJour";
+		}
+		else
+		{
+		    redirectTo = "ServletUsers?action=erreurMiseAJour";
+		}
+	    }
+	}
 
-	    boolean res = gestionnaireContacts.updateContact(currentUser, contact, nom, prenom);
-	    redirectTo = "ServletUsers?action=utilisateurMisAJour";
+	if (action.equals("ajoutNumero"))
+	{
+
+	    erreurs.clear();
+	    if(numero.length()!=10)
+	    {
+		erreurs.put("numero", "Veuillez entrer un numéro de téléphone correct");
+		redirectTo = "ServletUsers?action=ajouterUnNumero";
+	    }
+	    else
+	    {
+		System.out.println("ajouterUnNumero : " + contact);
+		Contact c = null;
+		Collection<Contact> contacts = gestionnaireContacts.getContactByID(currentUser, contact);
+		for (Contact getContact : contacts)
+		{
+		    c = getContact;
+		}
+		Telephone tel = new Telephone(numero);
+		gestionnaireContacts.ajouterNumero(currentUser, c, tel);
+		redirectTo = "ServletUsers?action=numeroAjoute";
+	    }
+//	    System.out.println("on est dans le if du post");
+	}
+
+	if (action.equals("supprimerNumero"))
+	{
+
+	    System.out.println("supprimerNumero : " + contact);
+	    Contact c = null;
+	    for (Contact getContact : gestionnaireContacts.getContactByID(currentUser, contact))
+	    {
+		c = getContact;
+	    }
+	    boolean result = gestionnaireTelephones.deletePhone(numero, currentUser, c);
+	    System.out.println("result : " + result);
+	    redirectTo = "ServletUsers?action=telephoneSupprime";
+
+//	    System.out.println("on est dans le if du post");
+	}
+
+	if (action.equals("supprimerAdresse"))
+	{
+
+	    System.out.println("supprimerAdresse : " + contact);
+	    Contact c = null;
+	    for (Contact getContact : gestionnaireContacts.getContactByID(currentUser, contact))
+	    {
+		c = getContact;
+	    }
+	    boolean result = gestionnaireAdresses.deleteAdr(adresse, currentUser, c);
+	    System.out.println("result : " + result);
+	    redirectTo = "ServletUsers?action=adresseSupprimee";
 
 //	    System.out.println("on est dans le if du post");
 	}
@@ -509,6 +698,11 @@ public class ServletUsers extends HttpServlet
 	{
 	    System.out.println("dans le créerUnContact");
 	    Contact c = new Contact(nom, prenom);
+	    Adresse adr = new Adresse(nomRue, Integer.parseInt(codePostal), nomVille);
+	    gestionnaireContacts.ajouterAdresse(currentUser, c, adr);
+	    Telephone tel = new Telephone(numero);
+	    gestionnaireContacts.ajouterNumero(currentUser, c, tel);
+//	    gestionnaireTelephones.creerTelephone(numero);
 	    gestionnaireUtilisateurs.addContact(currentUser, c);
 	    System.out.println("done");
 	    Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);

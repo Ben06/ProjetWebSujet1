@@ -235,7 +235,7 @@
                         <legend>Ajout d'une photo</legend>
 
                         <label for="fichier">Emplacement de la photo<span class="requis">*</span></label>
-                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/>
+                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/><span style="color: #f00;">${requestScope['erreurs']['photo']}</span><br/><br/>
                         <br />
 
                         <input type="hidden" name="contact" value="${param.contactID}"/>
@@ -253,7 +253,7 @@
                         <legend>Modification de la photo ${param.contactNom} ${param.contactPrenom}</legend>
 
                         <label for="fichier">Emplacement de la photo<span class="requis">*</span></label>
-                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/>
+                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/> <span style="color: #f00;">${requestScope['erreurs']['photo']}</span><br/><br/>
                         <br />
 
                         <input type="hidden" name="contact" value="${param.contactID}"/>
@@ -272,11 +272,27 @@
                     <form action="ServletUsers" method="post"> 
 
                         <p>
-                            <label for="nom">Nom : </label><input type="text" name="nom" required/></div><br/>  
+                            <label for="nom">Nom : </label><input type="text" name="nom" required/></div><br/>
                         </p>
 
                         <p>
                             <label for="prenom">Prénom : </label><input type="text" name="prenom" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Numéro : </label><input type="number" name="numero" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Adresse : </label><input type="text" name="nomRue" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Code Postal : </label><input type="number" name="codePostal" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Ville : </label><input type="text" name="nomVille" required/></div><br/>
                         </p>
 
                         <p>
@@ -288,39 +304,22 @@
                 </fieldset>
             </c:if>
 
-            <c:if test="${param.action == 'erreurCreationUtilisateur'}">
-                <br/>
-                <fieldset>
-                    <legend>Création d'utilisateur</legend>
-                    <form action="ServletUsers" method="post">
-                        <p>
-                            <label for="nom">Nom : </label><input type="text" name="nom" requird/> <span style="color: #f00;">${requestScope['erreurs']['nom']}</span><br/>
-                        </p>
-                        <p>
-                            <label for="prenom">Prénom : </label><input type="text" name="prenom" required/> <span style="color: #f00;">${requestScope['erreurs']['prenom']}</span><br/> 
-                        </p>
-                        <p>
-                            <!-- Astuce pour passer des paramètres à une servlet depuis un formulaire JSP !-->  
-                            <input type="hidden" name="action" value="creerUnUtilisateur"/>  
-                            <input type="submit" value="Créer l'utilisateur" name="submit"/>
-                        </p>
-                    </form>
-                </fieldset>
-            </c:if>
-
-
             <c:if test="${param.action == 'rechercheUtilisateur'}" >
                 <br/>
                 <fieldset>
                     <legend>Recherche de contact</legend>
                     <form action="ServletUsers" method="get"> 
                         <p>
-                            <label for="search"></login><input type="text" name="search" required/>
+                            <label for="search"></label><input type="text" name="search" required/>
 
-                                <select name="option">
-                                    <option value="nom">Nom</option>
-                                    <option value="prenom">Prénom</option>
-                                </select>
+                            <select name="option">
+                                <option value="nom">Nom</option>
+                                <option value="prenom">Prénom</option>
+                                <option value="numero">Numero</option>
+                                <option value="nomRue">Adresse</option>
+                                <option value="codePostal">Code Postal</option>
+                                <option value="nomVille">Ville</option>
+                            </select>
                         </p>
                         <br/><br/>
                         <p>
@@ -328,54 +327,6 @@
                             <input type="submit" value="Chercher" name="submit"/>  
                         </p>
                     </form> 
-                </fieldset>
-            </c:if>
-
-            <c:if test="${param.action == 'mettreajourUtilisateur'}" >
-                <br/>
-                <fieldset>
-                    <legend>Mise à jour un contact</legend>
-                    <form action="ServletUsers" method="post">
-                        <p>
-                            <label for="nom">Nom : </label><input type="text" name="nom" required/><br/>  
-                        </p>
-
-                        <p>
-                            <label for="prenom">Prénom : </label><input type="text" name="prenom" required/><br/><br>  
-                        </p>
-
-                        <p>
-                            <input type="hidden" name="action" value="updateUtilisateur"/>  
-                            <input type="submit" value="Mettre à jour" name="submit"/>
-                        </p>
-
-                    </form>
-                </fieldset>
-            </c:if>
-
-            <c:if test="${param.action == 'erreurMettreAJourUtilisateur'}" >
-                <br/>
-                <fieldset>
-                    <legend>Mise à jour d'un utilisateur</legend>
-                    <form action="ServletUsers" method="post">
-
-                        <p>
-                            <label for="login">Login : </label><input type="text" name="login" requird/> <span style="color: #f00;">${requestScope['erreurs']['login']}</span><br/> 
-                        </p>
-
-                        <p>
-                            <label for="nom">Nom : </label><input type="text" name="nom" required/> <span style="color: #f00;">${requestScope['erreurs']['nom']}</span><br/>
-                        </p>
-
-                        <p>
-                            <label for="prenom">Prénom : </label><input type="text" name="prenom" required/> <span style="color: #f00;">${requestScope['erreurs']['prenom']}</span><br/><br/>
-                        </p>
-
-                        <p>
-                            <input type="hidden" name="action" value="updateUtilisateur"/>  
-                            <input type="submit" value="Mettre à jour" name="submit"/>  
-                        </p>
-                    </form>
                 </fieldset>
             </c:if>
 
@@ -399,13 +350,54 @@
                     <legend>Modification de ${param.contactNom} ${param.contactPrenom} ? </legend>
                     <form action="ServletUsers" method="post">
                         <p>
-                            <label for="nom">Nom : </label><input type="text" name="nom" required/> <span style="color: #f00;">${requestScope['erreurs']['nom']}</span><br/>
+                            <label for="nom">Nom : </label><input type="text" name="nom"/> <span style="color: #f00;">${requestScope['erreurs']['nom']}</span><br/>
                         </p>
 
                         <p>
-                            <label for="prenom">Prénom : </label><input type="text" name="prenom" required/> <span style="color: #f00;">${requestScope['erreurs']['prenom']}</span><br/><br/>
+                            <label for="prenom">Prénom : </label><input type="text" name="prenom"/> <span style="color: #f00;">${requestScope['erreurs']['prenom']}</span><br/><br/>
                         </p>
+                        Séléctionnez l'adresse à modifier : 
                         <p>
+                            <select name="adresse">
+                                <c:forEach var="u" items="${requestScope['adressesList']}">  
+                                    <option value="${u.id}">${u.nomRue}, ${u.codePostal}, ${u.nomVille}</option>
+                                </c:forEach>
+                            </select>
+                        </p>
+
+                        Nouvelles valeurs : 
+                        <p>
+                            <label for="nomRue">Adresse : </label><input type="text" name="nomRue"/> <span style="color: #f00;">${requestScope['erreurs']['adresse']}</span><br/><br/>
+                        </p>
+
+                        <p>
+                            <label for="codePostal">Code Postal : </label><input type="text" name="codePostal"/> <span style="color: #f00;">${requestScope['erreurs']['codePostal']}</span><br/><br/>
+                        </p>
+
+                        <p>
+                            <label for="nomVille">Ville : </label><input type="text" name="nomVille"/> <span style="color: #f00;">${requestScope['erreurs']['ville']}</span><br/><br/>
+                        </p>
+
+
+                        Sélectionnez le numéro de téléphone à modifier : 
+
+                        <p>
+                            <select name="telephone">
+                                <c:forEach var="u" items="${requestScope['phonesList']}">  
+                                    <option value="${u.id}">${u.numero}</option>
+                                </c:forEach>
+                            </select>
+                        </p>
+
+                        Nouveau numéro : 
+                        <p>
+                            <label for="numero"></label><input type="text" name="numero"/> <span style="color: #f00;">${requestScope['erreurs']['numero']}</span><br/><br/>
+                        </p>
+
+
+
+                        <p>
+
                             <input type="hidden" name="contact" value="${param.contactID}"/>
                             <input type="hidden" name="action" value="updateUtilisateur"/>  
                             <input type="submit" value="Mettre à jour" name="submit"/>  
@@ -413,7 +405,7 @@
                     </form>
 
                     <br/>
-                    
+
                     <form action="ServletUsers" method="get">
                         <p>
                             <input type="hidden" name="contact" value="${param.contactID}"/>
@@ -423,6 +415,65 @@
                             <input type="submit" value="Mettre à jour la photo" name="submit"/> 
                         </p>
                     </form>
+                </fieldset>
+            </c:if>
+
+            <c:if test="${param.action == 'ajouterUnNumero'}" > 
+                <br/>
+                <fieldset>
+                    <legend>Ajout d'un numero pour le contact ${param.contactNom} ${param.contactPrenom}</legend>
+                    <form action="ServletUsers" method="post">
+                        <p>
+                        <p>
+                            <label for="nom">Numéro :  </label><input type="text" name="numero" required/><span style="color: #f00;">${requestScope['erreurs']['numero']}</span><br/><br/>
+                        </p>
+                        <input type="hidden" name="contact" value="${param.contactID}"/> 
+                        <input type="hidden" name="action" value="ajoutNumero"/>  
+                        <input type="submit" value="Ajouter le numéro" name="submit"/>  
+                        </p>
+                    </form>  
+                </fieldset>
+            </c:if>
+
+            <c:if test="${param.action == 'supprimerUnNumero'}" > 
+                <br/>
+                <fieldset>
+                    <legend>Suppression d'un numero pour le contact ${param.contactNom} ${param.contactPrenom}</legend>
+                    <form action="ServletUsers" method="post">
+                        <p>
+                        <p>
+                            <select name="numero">
+                                <c:forEach var="u" items="${requestScope['phonesList']}">  
+                                    <option value="${u.id}">${u.numero}</option>
+                                </c:forEach>
+                            </select>
+                        </p>
+                        <input type="hidden" name="contact" value="${param.contactID}"/> 
+                        <input type="hidden" name="action" value="supprimerNumero"/>  
+                        <input type="submit" value="Supprimer le numéro" name="submit"/>  
+                        </p>
+                    </form>  
+                </fieldset>
+            </c:if>
+
+            <c:if test="${param.action == 'supprimerUneAdresse'}" > 
+                <br/>
+                <fieldset>
+                    <legend>Suppression d'une adresse pour le contact ${param.contactNom} ${param.contactPrenom}</legend>
+                    <form action="ServletUsers" method="post">
+                        <p>
+                        <p>
+                            <select name="adresse">
+                                <c:forEach var="u" items="${requestScope['adressesList']}">  
+                                    <option value="${u.id}">${u.nomRue}, ${u.codePostal}, ${u.nomVille}</option>
+                                </c:forEach>
+                            </select>
+                        </p>
+                        <input type="hidden" name="contact" value="${param.contactID}"/> 
+                        <input type="hidden" name="action" value="supprimerAdresse"/>  
+                        <input type="submit" value="Supprimer l'adresse" name="submit"/>  
+                        </p>
+                    </form>  
                 </fieldset>
             </c:if>
 
@@ -457,8 +508,24 @@
 
             <c:if test="${param.action=='photoAjoute'}">
                 <br/>
-                <span class="resultat">Contact mis à jour !</span>
+                <span class="resultat">Photo ajoutée avec succès !</span>
             </c:if>
+
+            <c:if test="${param.action=='numeroAjoute'}">
+                <br/>
+                <span class="resultat">Numéro ajouté avec succès !</span>
+            </c:if>
+
+            <c:if test="${param.action=='telephoneSupprime'}">
+                <br/>
+                <span class="resultat">Numéro supprimé !</span>
+            </c:if>
+
+            <c:if test="${param.action=='adresseSupprimee'}">
+                <br/>
+                <span class="resultat">Adresse supprimée !</span>
+            </c:if>
+
 
             <!-- Fin du menu -->  
 
@@ -473,7 +540,10 @@
                             <td><b>Nom</b></td>  
                             <td><b>Prénom</b></td>
                             <td><b>Photo</b></td>
+                            <td><b>Telephone</b></td>
+                            <td><b>Adresse</b></td>
                             <td></td>
+                            <!--<td><b>Telephone</b></td>-->
                         </tr>  
 
                         <!-- Ici on affiche les lignes, une par utilisateur -->  
@@ -496,6 +566,57 @@
                                 <c:if test="${!empty u.pictureName}">
                                     <td><img src="resources/files/${u.pictureName}" alt="contact id:${u.id} picture" height="60" width="60"></td>
                                     </c:if>
+                                <td>
+                                    <%--<c:if test="${!empty requestScope['phonesOf'.concat(id)]}">--%>
+                                    <c:set var="id" value="${u.id}"/>
+                                    <!--${phoneList}-->
+                                    <c:forEach var="tel" items="${requestScope['phonesOf'.concat(id)]}">
+                                        ${tel.numero}
+                                        <br/>
+                                    </c:forEach>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="supprimerUnNumero"/>  
+                                        <input type="submit" value="X" name="submit"/>
+                                    </form>
+
+                                    <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="ajouterUnNumero"/>  
+                                        <input type="submit" value="Ajouter" name="submit"/>
+                                    </form>
+                                    <%--</c:if>--%>
+                                </td>
+                                <td>
+                                    <%--<c:if test="${!empty requestScope['phonesOf'.concat(id)]}">--%>
+                                    <c:set var="id" value="${u.id}"/>
+                                    <c:forEach var="adresse" items="${requestScope['adressesOf'.concat(id)]}">
+                                        ${adresse.nomRue}, ${adresse.codePostal}, ${adresse.nomVille}
+                                        <br/>
+                                    </c:forEach>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="supprimerUneAdresse"/>  
+                                        <input type="submit" value="X" name="submit"/>
+                                    </form>
+
+                                    <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="ajouterUneAdresse"/>  
+                                        <input type="submit" value="Ajouter" name="submit"/>
+                                    </form>
+                                    <%--</c:if>--%>
+                                </td>
                                 <td>
                                     <form action="ServletUsers" method="get">
                                         <input type="hidden" name="contact" value="${u.id}"/>
@@ -559,6 +680,10 @@
                             <td><b>Nom</b></td>  
                             <td><b>Prénom</b></td>
                             <td><b>Photo</b></td>
+                            <td><b>Telephone</b></td>
+                            <td><b>Adresse</b></td>
+                            <td></td>
+                            <!--<td><b>Telephone</b></td>-->
                         </tr>  
 
                         <!-- Ici on affiche les lignes, une par utilisateur -->  
@@ -581,6 +706,57 @@
                                 <c:if test="${!empty u.pictureName}">
                                     <td><img src="resources/files/${u.pictureName}" alt="contact id:${u.id} picture" height="60" width="60"></td>
                                     </c:if>
+                                <td>
+                                    <%--<c:if test="${!empty requestScope['phonesOf'.concat(id)]}">--%>
+                                    <c:set var="id" value="${u.id}"/>
+                                    <!--${phoneList}-->
+                                    <c:forEach var="tel" items="${requestScope['phonesOf'.concat(id)]}">
+                                        ${tel.numero}
+                                        <br/>
+                                    </c:forEach>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="supprimerUnNumero"/>  
+                                        <input type="submit" value="X" name="submit"/>
+                                    </form>
+
+                                    <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="ajouterUnNumero"/>  
+                                        <input type="submit" value="Ajouter" name="submit"/>
+                                    </form>
+                                    <%--</c:if>--%>
+                                </td>
+                                <td>
+                                    <%--<c:if test="${!empty requestScope['phonesOf'.concat(id)]}">--%>
+                                    <c:set var="id" value="${u.id}"/>
+                                    <c:forEach var="adresse" items="${requestScope['adressesOf'.concat(id)]}">
+                                        ${adresse.nomRue}, ${adresse.codePostal}, ${adresse.nomVille}
+                                        <br/>
+                                    </c:forEach>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="supprimerUneAdresse"/>  
+                                        <input type="submit" value="X" name="submit"/>
+                                    </form>
+
+                                    <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
+                                    <form action="ServletUsers" method="get">
+                                        <input type="hidden" name="contact" value="${u.id}"/>
+                                        <input type="hidden" name="contactNom" value="${u.firstname}"/>
+                                        <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
+                                        <input type="hidden" name="action" value="ajouterUneAdresse"/>  
+                                        <input type="submit" value="Ajouter" name="submit"/>
+                                    </form>
+                                    <%--</c:if>--%>
+                                </td>
                                 <td>
                                     <form action="ServletUsers" method="get">
                                         <input type="hidden" name="contact" value="${u.id}"/>
