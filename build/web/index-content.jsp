@@ -133,8 +133,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                         </p>
                         <br />
 
@@ -160,8 +160,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                             <br />
                         </p>
                     </fieldset>
@@ -190,8 +190,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                             <br />
                         </p>
                     </fieldset>
@@ -215,8 +215,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                         </p>
                         <br />
                     </fieldset>
@@ -365,7 +365,7 @@
                     </form>  
                 </fieldset>
             </c:if>
-                
+
             <c:if test="${param.action == 'creationUtilisateur'}">
                 <br/>
                 <fieldset>
@@ -535,6 +535,58 @@
                     </form>  
                 </fieldset>
             </c:if>
+                
+            <c:if test="${param.action == 'erreurajouterUneAdresse'}" > 
+                <br/>
+                <fieldset>
+                    <legend>Ajout d'une adresse pour le contact ${param.contactNom} ${param.contactPrenom}</legend>
+                    <form action="ServletUsers" method="post">
+                        <p>
+                        <p>
+                            <label for="nom">Adresse : </label><input type="text" name="nomRue" required/>
+                        </p>
+
+                        <p>
+                            <label for="nom">Code Postal : </label><input type="number" name="codePostal" required/><span style="color: #f00;">${requestScope['erreurs']['codePostal']}</span><br/><br/>
+                        </p>
+
+                        <p>
+                            <label for="nom">Ville :  </label><input type="text" name="nomVille" required/>
+                        </p>
+
+                        <input type="hidden" name="contact" value="${param.contactID}"/> 
+                        <input type="hidden" name="action" value="ajoutAdresse"/>  
+                        <input type="submit" value="Ajouter une adresse" name="submit"/>  
+                        </p>
+                    </form>  
+                </fieldset>
+            </c:if>
+
+            <c:if test="${param.action == 'ajouterUneAdresse'}" > 
+                <br/>
+                <fieldset>
+                    <legend>Ajout d'une adresse pour le contact ${param.contactNom} ${param.contactPrenom}</legend>
+                    <form action="ServletUsers" method="post">
+                        <p>
+                        <p>
+                            <label for="nom">Adresse : </label><input type="text" name="nomRue" required/>
+                        </p>
+
+                        <p>
+                            <label for="nom">Code Postal : </label><input type="number" name="codePostal" required/><span style="color: #f00;">${requestScope['erreurs']['codePostal']}</span><br/><br/>
+                        </p>
+
+                        <p>
+                            <label for="nom">Ville :  </label><input type="text" name="nomVille" required/>
+                        </p>
+
+                        <input type="hidden" name="contact" value="${param.contactID}"/> 
+                        <input type="hidden" name="action" value="ajoutAdresse"/>  
+                        <input type="submit" value="Ajouter une adresse" name="submit"/>  
+                        </p>
+                    </form>  
+                </fieldset>
+            </c:if>
 
             <c:if test="${param.action == 'supprimerUnNumero'}" > 
                 <br/>
@@ -563,7 +615,6 @@
                     <legend>Suppression d'une adresse pour le contact ${param.contactNom} ${param.contactPrenom}</legend>
                     <form action="ServletUsers" method="post">
                         <p>
-                        <p>
                             <select name="adresse">
                                 <c:forEach var="u" items="${requestScope['adressesList']}">  
                                     <option value="${u.id}">${u.nomRue}, ${u.codePostal}, ${u.nomVille}</option>
@@ -591,6 +642,13 @@
             <!--            <br/>
                         <span class="resultat">Tous les utilisateurs ont été supprimés !</span>-->
             <%--</c:if>--%>
+
+
+
+            <c:if test="${param.action=='adresseAjoutee'}">
+                <br/>
+                <span class="resultat">Adresse crée !</span>
+            </c:if>
 
             <c:if test="${param.action=='utilisateurSupprime'}">
                 <br/>
@@ -635,7 +693,7 @@
             <c:if test="${param.action == 'listerLesUtilisateurs'}" >  
                 <!--<h2>Resultat de la recherche</h2>-->  
                 <c:if test = "${requestScope['listeDesUsers'] != null}">
-                     <table classe="sortable" border="4">  
+                    <table classe="sortable" border="4">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
                             <td><b>Nom</b></td>  
@@ -643,7 +701,7 @@
                             <td><b>Photo</b></td>
                             <td><b>Telephone</b></td>
                             <td><b>Adresse</b></td>
-                             <td><b>Suppresion</b></td>
+                            <td><b>Suppresion</b></td>
                             <td><b>Modification</b></td>
                             <!--<td><b>Telephone</b></td>-->
                         </tr>  
@@ -776,7 +834,7 @@
             <c:if test="${param.action == 'chercherParLogin'}" >  
                 <!--<h2>Resultat de la recherche</h2>-->  
                 <c:if test = "${requestScope['listeDesUsers'] != null}">
-                     <table classe="sortable" border="4">  
+                    <table classe="sortable" border="4">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
                             <td><b>Nom</b></td>  
@@ -784,7 +842,7 @@
                             <td><b>Photo</b></td>
                             <td><b>Telephone</b></td>
                             <td><b>Adresse</b></td>
-                             <td><b>Suppresion</b></td>
+                            <td><b>Suppresion</b></td>
                             <td><b>Modification</b></td>
                             <!--<td><b>Telephone</b></td>-->
                         </tr>  

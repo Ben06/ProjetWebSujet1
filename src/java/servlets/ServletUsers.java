@@ -246,17 +246,17 @@ public class ServletUsers extends HttpServlet
 	    else if (action.equals("creerUtilisateursDeTest"))
 	    {
 		Collection<Contact> contacts = gestionnaireContacts.creerContactDeTest();
-		
+
 //		Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);
 		for (Contact c : contacts)
 		{
 		    Collection<Telephone> tels = gestionnaireTelephones.creerTelephonesTest();
-		    for (Telephone t:tels)
+		    for (Telephone t : tels)
 		    {
 			gestionnaireContacts.ajouterNumero(currentUser, c, t);
 		    }
 		    Collection<Adresse> adr = gestionnaireAdresses.creerAdresseTest();
-		    for(Adresse a : adr)
+		    for (Adresse a : adr)
 		    {
 			gestionnaireContacts.ajouterAdresse(currentUser, c, a);
 		    }
@@ -355,6 +355,22 @@ public class ServletUsers extends HttpServlet
 	    ///////////////////////////////////////////////////////////////////////////////
 	    /////////////////// REDIRECTION VERS D'AUTRES ACTIONS /////////////////////////
 	    //////////////////////////////////////////////////////////////////////////////
+
+	    else if (action.equals("adresseAjoutee"))
+	    {
+		forwardTo = "index.jsp?action=adresseAjoutee";
+	    }
+
+	    else if (action.equals("erreurajouterUneAdresse"))
+	    {
+		request.setAttribute("erreurs", erreurs);
+		forwardTo = "index.jsp?action=erreurajouterUneAdresse&contactID="+contact;
+	    }
+
+	    else if (action.equals("ajouterUneAdresse"))
+	    {
+		forwardTo = "index.jsp?action=ajouterUneAdresse&contactID="+contact;
+	    }
 
 	    else if (action.equals("erreurMiseAJour"))
 	    {
@@ -630,6 +646,30 @@ public class ServletUsers extends HttpServlet
 //	    System.out.println("on est dans le if du post");
 	}
 
+	if (action.equals("ajoutAdresse"))
+	{
+	    System.out.println("");
+	    erreurs.clear();
+	    if (codePostal.length() != 5 && codePostal.length() != 0)
+	    {
+		erreurs.put("codePostal", "Veuillez entrer un code postal correct (6 chiffres)");
+		request.setAttribute("erreurs", erreurs);
+		redirectTo = "ServletUsers?action=erreurajouterUneAdresse&contactID="+contact;
+	    }
+	    else
+	    {
+		Contact c = null;
+		Collection<Contact> contacts = gestionnaireContacts.getContactByID(currentUser, contact);
+		for (Contact getContact : contacts)
+		{
+		    c = getContact;
+		}
+		Adresse adr = new Adresse(nomRue, Integer.parseInt(codePostal), nomVille);
+		gestionnaireContacts.ajouterAdresse(currentUser, c, adr);
+		redirectTo = "ServletUsers?action=adresseAjoutee";
+
+	    }
+	}
 	if (action.equals("supprimerNumero"))
 	{
 
