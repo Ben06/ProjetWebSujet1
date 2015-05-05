@@ -7,6 +7,7 @@ package utilisateurs.gestionnaires;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,28 +27,27 @@ public class GestionnaireContacts
     @PersistenceContext
     private EntityManager em;
 
+    private String generateRandomString() {
+        Random r = new Random();
+        String randomString = "";
+
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        for (int i = 0; i < 8; i++) {
+            randomString += alphabet.charAt(r.nextInt(alphabet.length()));
+        }
+        
+        return randomString;
+    }
+    
+    
     public Collection<Contact> creerContactDeTest()
     {
 	System.out.println("creation des contacts de test");
 	Collection<Contact> contacts = new ArrayList<>();
-
-	contacts.add(creerContact("John", "Lennon"));
-	contacts.add(creerContact("John1", "Lennon"));
-	contacts.add(creerContact("John2", "Lennon"));
-	contacts.add(creerContact("John3", "Lennon"));
-	contacts.add(creerContact("John4", "Lennon"));
-	contacts.add(creerContact("John5", "Lennon"));
-	contacts.add(creerContact("John6", "Lennon"));
-	contacts.add(creerContact("John7", "Lennon"));
-	contacts.add(creerContact("John8", "Lennon"));
-	contacts.add(creerContact("John9", "Lennon"));
-	contacts.add(creerContact("John10", "Lennon"));
-	contacts.add(creerContact("John11", "Lennon"));
-	contacts.add(creerContact("John112", "Lennon"));
-	contacts.add(creerContact("John13", "Lennon"));
-	contacts.add(creerContact("John15", "Lennon"));
-	contacts.add(creerContact("John1516", "Lennon"));
-	contacts.add(creerContact("John151", "Lennon"));
+	for(int i=0; i<30; i++)
+	{
+	    contacts.add(creerContact(generateRandomString(), generateRandomString()));
+	}
 	return contacts;
     }
 
@@ -274,10 +274,12 @@ public class GestionnaireContacts
 		    if (toDelete.getId() == c.getId())
 		    {
 			liste.remove(toDelete);
+//			em.remove(toDelete);
 		    }
 		}
 		u.setContacts(liste);
 		em.persist(u);
+//		em.remove(c);
 		System.out.println("done...");
 	    }
 	    return true;

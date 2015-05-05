@@ -246,22 +246,21 @@ public class ServletUsers extends HttpServlet
 	    else if (action.equals("creerUtilisateursDeTest"))
 	    {
 		Collection<Contact> contacts = gestionnaireContacts.creerContactDeTest();
-//		gestionnaireUtilisateurs.getAllUsers();
+		
 //		Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);
 		for (Contact c : contacts)
 		{
-
-		    Contact contactTest = new Contact(c.getFirstname(), c.getLastname());
-//		    Telephone tel = gestionnaireTelephones.creerTelephone("0493099894");
-//		    Telephone telTest = new Telephone(tel.getNumero());
-//		    gestionnaireContacts.ajouterNumero(currentUser, contactTest, telTest);
-//		    System.out.println("numero du contact : taille de la liste de contact : "+contactTest.getPhone().size());
-//		    for (Telephone t : contactTest.getPhone())
-//		    {
-//			System.out.println("=> "+t.getNumero());
-//		    }
-//		    System.out.println("Numéro ajouté au contact, ajout du contact à l'utilisateur");
-		    gestionnaireUtilisateurs.addContact(currentUser, contactTest);
+		    Collection<Telephone> tels = gestionnaireTelephones.creerTelephonesTest();
+		    for (Telephone t:tels)
+		    {
+			gestionnaireContacts.ajouterNumero(currentUser, c, t);
+		    }
+		    Collection<Adresse> adr = gestionnaireAdresses.creerAdresseTest();
+		    for(Adresse a : adr)
+		    {
+			gestionnaireContacts.ajouterAdresse(currentUser, c, a);
+		    }
+		    gestionnaireUtilisateurs.addContact(currentUser, c);
 		}
 //		System.out.println("après le premier all contact");
 		nbMaxPageFloat = (float) gestionnaireContacts.getAllContact(currentUser).size() / 10;
@@ -586,7 +585,7 @@ public class ServletUsers extends HttpServlet
 		request.setAttribute("erreurs", erreurs);
 		redirectTo = "ServletUsers?action=modification&contact=" + contact;
 	    }
-	    else if (codePostal.length() != 6 && codePostal.length() != 0)
+	    else if (codePostal.length() != 5 && codePostal.length() != 0)
 	    {
 		erreurs.put("codePostal", "Veuillez entrer un code postal correct (6 chiffres)");
 		request.setAttribute("erreurs", erreurs);
@@ -676,7 +675,7 @@ public class ServletUsers extends HttpServlet
 		request.setAttribute("erreurs", erreurs);
 		redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
 	    }
-	    else if (codePostal.length() != 6 && codePostal.length() != 0)
+	    else if (codePostal.length() != 5 && codePostal.length() != 0)
 	    {
 		erreurs.put("codePostal", "Veuillez entrer un code postal correct (6 chiffres)");
 		request.setAttribute("erreurs", erreurs);

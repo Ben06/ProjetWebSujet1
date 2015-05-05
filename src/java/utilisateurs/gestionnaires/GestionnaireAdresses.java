@@ -5,13 +5,14 @@
  */
 package utilisateurs.gestionnaires;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import utilisateurs.modeles.Adresse;
 import utilisateurs.modeles.Contact;
-import utilisateurs.modeles.Telephone;
 import utilisateurs.modeles.Utilisateur;
 
 /**
@@ -25,7 +26,43 @@ public class GestionnaireAdresses
     @PersistenceContext
     private EntityManager em;
 
-    public Adresse creerTelephone(String nomRue, int cp, String nomVille)
+    private String generateRandomNumber()
+    {
+	Random r = new Random();
+	String randomNumber = "";
+
+	String alphabet = "0123456789";
+	for (int i = 0; i < 5; i++)
+	{
+	    randomNumber += alphabet.charAt(r.nextInt(alphabet.length()));
+	}
+
+	return randomNumber;
+    }
+
+    private String generateRandomString()
+    {
+	Random r = new Random();
+	String randomString = "";
+
+	String alphabet = "abcdefghijklmnopqrstuvwxyz";
+	for (int i = 0; i < 8; i++)
+	{
+	    randomString += alphabet.charAt(r.nextInt(alphabet.length()));
+	}
+
+	return randomString;
+    }
+
+    public Collection<Adresse> creerAdresseTest()
+    {
+	Collection<Adresse> adr = new ArrayList<>();
+	adr.add(creerAdresse(generateRandomString(), Integer.parseInt(generateRandomNumber()), generateRandomString()));
+	adr.add(creerAdresse(generateRandomString(), Integer.parseInt(generateRandomNumber()), generateRandomString()));
+	return adr;
+    }
+
+    public Adresse creerAdresse(String nomRue, int cp, String nomVille)
     {
 	System.out.println("creation d'un telephone");
 	Adresse adr = new Adresse(nomRue, cp, nomVille);
@@ -40,9 +77,9 @@ public class GestionnaireAdresses
 	try
 	{
 	    Collection<Adresse> adresses = c.getAdresses();
-	    for(Adresse toDelete : adresses)
+	    for (Adresse toDelete : adresses)
 	    {
-		if(toDelete.getId() == Integer.parseInt(id))
+		if (toDelete.getId() == Integer.parseInt(id))
 		{
 		    adresses.remove(toDelete);
 		}

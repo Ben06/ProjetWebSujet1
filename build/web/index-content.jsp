@@ -12,7 +12,10 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <html>  
     <head>  
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="resources/js/kickstart.js"></script> <!-- KICKSTART -->
+        <link rel="stylesheet" href="resources/css/kickstart.css" media="all" /> <!-- KICKSTART -->
     </head>  
     <body>
         <c:choose>
@@ -42,7 +45,8 @@
                             <p>
                                 <!-- Astuce pour passer des paramètres à une servlet depuis un formulaire JSP !-->  
                                 <input type="hidden" name="action" value="inscription"/>  
-                                <input class="btn btn-default" type="submit" value="S'inscrire" name="submit"/>
+                                <!-- <input class="btn btn-default" type="submit" value="S'inscrire" name="submit"/> -->
+                                <button type="submit" value="S'inscrire" class="medium green"><i class="fa fa-plus-square"></i> Inscription</button>
                             </p>
                         </form> 
                         <br />
@@ -75,7 +79,8 @@
                             <p>
                                 <!-- Astuce pour passer des paramètres à une servlet depuis un formulaire JSP !-->  
                                 <input type="hidden" name="action" value="inscription"/>  
-                                <input type="submit" value="S'inscrire" name="submit"/>
+                                <!-- <input class="btn btn-default" type="submit" value="S'inscrire" name="submit"/> -->
+                                <button type="submit" value="S'inscrire" class="medium green"><i class="fa fa-plus-square"></i> Inscription</button>
                             </p>
                         </form> 
                         <br />
@@ -88,7 +93,8 @@
                     <form method="post" action="ServletUsers">
                         Vous etes connecté(e) en tant que : ${sessionScope.sessionUtilisateur.login}<br/><br/>
                         <input type="hidden" name="action" value="Deconnexion"/>
-                        <input type="submit" value="Déconnexion" class="sansLabel" />
+                        <!-- <input type="submit" value="Déconnexion" class="sansLabel" /> -->
+                        <button type="submit" value="Déconnexion" class="large red"><i class="fa fa-times-circle"></i> Deconnexion</button>
                         <br/>
                     </form>
                 </fieldset>
@@ -127,7 +133,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <input type="submit" value="Connexion" class="sansLabel" />
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                         </p>
                         <br />
 
@@ -153,7 +160,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <input type="submit" value="Connexion" class="sansLabel" />
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                             <br />
                         </p>
                     </fieldset>
@@ -182,7 +190,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <input type="submit" value="Connexion" class="sansLabel" />
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                             <br />
                         </p>
                     </fieldset>
@@ -206,7 +215,8 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <input type="submit" value="Connexion" class="sansLabel" />
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                         </p>
                         <br />
                     </fieldset>
@@ -625,7 +635,7 @@
             <c:if test="${param.action == 'listerLesUtilisateurs'}" >  
                 <!--<h2>Resultat de la recherche</h2>-->  
                 <c:if test = "${requestScope['listeDesUsers'] != null}">
-                    <table border="10">  
+                     <table classe="sortable" border="4">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
                             <td><b>Nom</b></td>  
@@ -633,7 +643,8 @@
                             <td><b>Photo</b></td>
                             <td><b>Telephone</b></td>
                             <td><b>Adresse</b></td>
-                            <td></td>
+                             <td><b>Suppresion</b></td>
+                            <td><b>Modification</b></td>
                             <!--<td><b>Telephone</b></td>-->
                         </tr>  
 
@@ -765,7 +776,7 @@
             <c:if test="${param.action == 'chercherParLogin'}" >  
                 <!--<h2>Resultat de la recherche</h2>-->  
                 <c:if test = "${requestScope['listeDesUsers'] != null}">
-                    <table border="10">  
+                     <table classe="sortable" border="4">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
                             <td><b>Nom</b></td>  
@@ -773,7 +784,8 @@
                             <td><b>Photo</b></td>
                             <td><b>Telephone</b></td>
                             <td><b>Adresse</b></td>
-                            <td></td>
+                             <td><b>Suppresion</b></td>
+                            <td><b>Modification</b></td>
                             <!--<td><b>Telephone</b></td>-->
                         </tr>  
 

@@ -5,7 +5,9 @@
  */
 package utilisateurs.gestionnaires;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,6 +26,28 @@ public class GestionnaireTelephones
     @PersistenceContext
     private EntityManager em;
 
+    private String generateRandomNumber()
+    {
+	Random r = new Random();
+	String randomNumber = "";
+
+	String alphabet = "0123456789";
+	for (int i = 0; i < 10; i++)
+	{
+	    randomNumber += alphabet.charAt(r.nextInt(alphabet.length()));
+	}
+
+	return randomNumber;
+    }
+
+    public Collection<Telephone> creerTelephonesTest()
+    {
+	Collection<Telephone> tels = new ArrayList<>();
+	tels.add(creerTelephone(generateRandomNumber()));
+	tels.add(creerTelephone(generateRandomNumber()));
+	return tels;
+    }
+
     public Telephone creerTelephone(String numero)
     {
 	System.out.println("creation d'un telephone");
@@ -40,9 +64,9 @@ public class GestionnaireTelephones
 	try
 	{
 	    Collection<Telephone> tels = c.getPhone();
-	    for(Telephone toDelete : tels)
+	    for (Telephone toDelete : tels)
 	    {
-		if(toDelete.getId() == Integer.parseInt(id))
+		if (toDelete.getId() == Integer.parseInt(id))
 		{
 		    tels.remove(toDelete);
 		}

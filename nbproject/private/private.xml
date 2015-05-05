@@ -3,15 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/utilisateurs/modeles/Telephone.java</file>
             <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/utilisateurs/modeles/Contact.java</file>
             <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/web/index-content.jsp</file>
-            <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/utilisateurs/modeles/Utilisateur.java</file>
-            <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/servlets/Upload.java</file>
+            <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/utilisateurs/gestionnaires/GestionnaireAdresses.java</file>
             <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/utilisateurs/gestionnaires/GestionnaireUtilisateurs.java</file>
             <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/servlets/ServletUsers.java</file>
             <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/utilisateurs/gestionnaires/GestionnaireContacts.java</file>
             <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/java/utilisateurs/gestionnaires/GestionnaireTelephones.java</file>
+            <file>file:/C:/Users/Divz/Documents/NetBeansProjects/TP2/src/conf/persistence.xml</file>
         </group>
     </open-files>
 </project-private>
