@@ -233,13 +233,63 @@
                     <!--${param.contactID}-->
                     <fieldset>
                         <legend>Ajout d'une photo</legend>
-
                         <label for="fichier">Emplacement de la photo<span class="requis">*</span></label>
-                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/><span style="color: #f00;">${requestScope['erreurs']['photo']}</span><br/><br/>
+                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/>
                         <br />
 
+
+                        <input type="hidden" name="contactNom" value="${param.contactNom}"/>
+                        <input type="hidden" name="contactPrenom" value="${param.contactPrenom}"/>
+                        <input type="hidden" name="contact" value="${param.contactID}"/>
+                        <input type="hidden" name="action1" value="ajoutDePhoto"/> 
+                        <input type="hidden" name="action" value="ajoutDePhoto"/> 
+                        <input type="submit" value="Envoyer" class="sansLabel" />
+                        <br />                
+                    </fieldset>
+                </form>
+            </c:if>
+
+            <c:if test="${param.action == 'erreurajouterUnePhoto'}">
+                <form action="Upload" method="post" enctype="multipart/form-data">
+                    <!--${param.contactID}-->
+                    <fieldset>
+                        <legend>Ajout d'une photo</legend>
+                        <c:if test="${param.erreurPhoto!=null}">
+                            <span style="color: #f00;">${param.erreurPhoto}</span><br/><br/>
+                        </c:if>
+                        <label for="fichier">Emplacement de la photo<span class="requis">*</span></label>
+                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/>
+                        <br />
+
+                        <input type="hidden" name="contactNom" value="${param.contactNom}"/>
+                        <input type="hidden" name="contactPrenom" value="${param.contactPrenom}"/>
                         <input type="hidden" name="contact" value="${param.contactID}"/>
                         <input type="hidden" name="action" value="ajoutDePhoto"/> 
+                        <input type="hidden" name="action1" value="ajoutDePhoto"/> 
+                        <input type="submit" value="Envoyer" class="sansLabel" />
+                        <br />                
+                    </fieldset>
+                </form>
+            </c:if>
+
+            <c:if test="${param.action == 'erreurmodifierPhoto'}">
+                <form action="Upload" method="post" enctype="multipart/form-data">
+                    <!--${param.contactID}-->
+                    <fieldset>
+                        <legend>Modification de la photo ${param.contactNom} ${param.contactPrenom}</legend>
+
+                        <c:if test="${param.erreurPhoto!=null}">
+                            <span style="color: #f00;">${param.erreurPhoto}</span><br/><br/>
+                        </c:if>
+                        <label for="fichier">Emplacement de la photo<span class="requis">*</span></label>
+                        <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/> <span style="color: #f00;">${requestScope['erreurs']['photo']}</span><br/><br/>
+                        <br />
+
+                        <input type="hidden" name="contactNom" value="${param.contactNom}"/>
+                        <input type="hidden" name="contactPrenom" value="${param.contactPrenom}"/>
+                        <input type="hidden" name="contact" value="${param.contactID}"/>
+                        <input type="hidden" name="action" value="ajoutDePhoto"/> 
+                        <input type="hidden" name="action1" value="modification"/>
                         <input type="submit" value="Envoyer" class="sansLabel" />
                         <br />                
                     </fieldset>
@@ -255,8 +305,10 @@
                         <label for="fichier">Emplacement de la photo<span class="requis">*</span></label>
                         <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/> <span style="color: #f00;">${requestScope['erreurs']['photo']}</span><br/><br/>
                         <br />
-
+                        <input type="hidden" name="contactNom" value="${param.contactNom}"/>
+                        <input type="hidden" name="contactPrenom" value="${param.contactPrenom}"/>
                         <input type="hidden" name="contact" value="${param.contactID}"/>
+                        <input type="hidden" name="action1" value="modification"/> 
                         <input type="hidden" name="action" value="ajoutDePhoto"/> 
                         <input type="submit" value="Envoyer" class="sansLabel" />
                         <br />                
@@ -265,6 +317,45 @@
             </c:if>
             <!--</div>-->
             <!--</div>-->
+            <c:if test="${param.action == 'erreurCreationUtilisateur'}">
+                <br/>
+                <fieldset>
+                    <legend>Création de contact</legend>
+                    <form action="ServletUsers" method="post"> 
+
+                        <p>
+                            <label for="nom">Nom : </label><input type="text" name="nom" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Prénom : </label><input type="text" name="prenom" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Numéro : </label><input type="number" name="numero" required/></div><span style="color: #f00;">${requestScope['erreurs']['numero']}</span><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Adresse : </label><input type="text" name="nomRue" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Code Postal : </label><input type="number" name="codePostal" required/></div><span style="color: #f00;">${requestScope['erreurs']['codePostal']}</span><br/>
+                        </p>
+
+                        <p>
+                            <label for="prenom">Ville : </label><input type="text" name="nomVille" required/></div><br/>
+                        </p>
+
+                        <p>
+                            <!-- Astuce pour passer des paramètres à une servlet depuis un formulaire JSP !-->  
+                            <input type="hidden" name="action" value="creerUnUtilisateur"/>  
+                            <input type="submit" value="Créer le contact" name="submit"/>
+                        </p>
+                    </form>  
+                </fieldset>
+            </c:if>
+                
             <c:if test="${param.action == 'creationUtilisateur'}">
                 <br/>
                 <fieldset>

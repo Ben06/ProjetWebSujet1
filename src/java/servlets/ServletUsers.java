@@ -92,7 +92,7 @@ public class ServletUsers extends HttpServlet
 	String contactNom = request.getParameter("contactNom");
 	String contactPrenom = request.getParameter("contactPrenom");
 	String erreurPhoto = request.getParameter("erreurPhoto");
-	
+
 	String forwardTo = "";
 	String message = "";
 
@@ -430,6 +430,12 @@ public class ServletUsers extends HttpServlet
 		System.out.println("suppression du contact d'id : " + contact);
 		forwardTo = "index.jsp?action=suppression&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
 	    }
+	    else if (action.equals("erreurmodifierPhoto"))
+	    {
+		request.setAttribute("erreurs", erreurs);
+		System.out.println("l'utilisateur va maintenant pouvoir modifier une photo au contact d'id : " + contact);
+		forwardTo = "index.jsp?action=modifierPhoto&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom + "&erreurPhoto=" + erreurPhoto;
+	    }
 
 	    else if (action.equals("modifierPhoto"))
 	    {
@@ -438,13 +444,22 @@ public class ServletUsers extends HttpServlet
 		forwardTo = "index.jsp?action=modifierPhoto&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
 	    }
 
+	    else if (action.equals("erreurajouterUnePhoto"))
+	    {
+//		erreurs.clear();
+//		erreurs.put("photo", erreurPhoto);
+//		request.setAttribute("erreurs", erreurs);
+//		System.out.println("l'utilisateur va maintenant pouvoir ajouter une photo au contact d'id : " + contact);
+		forwardTo = "index.jsp?action=ajouterUnePhoto&contactID=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom + "&erreurPhoto=" + erreurPhoto;
+	    }
+
 	    else if (action.equals("ajouterUnePhoto"))
 	    {
-		erreurs.clear();
-		erreurs.put("photo", erreurPhoto);
-		request.setAttribute("erreurs", erreurs);
+//		erreurs.clear();
+//		erreurs.put("photo", erreurPhoto);
+//		request.setAttribute("erreurs", erreurs);
 		System.out.println("l'utilisateur va maintenant pouvoir ajouter une photo au contact d'id : " + contact);
-		forwardTo = "index.jsp?action=ajouterUnePhoto&contactID=" + contact;
+		forwardTo = "index.jsp?action=ajouterUnePhoto&contactID=" + contact + "&erreurPhoto=" + erreurPhoto;
 	    }
 
 	    else if (action.equals("inscrireUtilisateur"))
@@ -563,13 +578,19 @@ public class ServletUsers extends HttpServlet
 	}
 	if (action.equals("updateUtilisateur"))
 	{
-	    System.out.println("numero de tel dans le update : "+numero+", length : "+numero.length());
+	    System.out.println("numero de tel dans le update : " + numero + ", length : " + numero.length());
 	    erreurs.clear();
-	    if (numero.length() != 10 && numero.length()!=0)
+	    if (numero.length() != 10 && numero.length() != 0)
 	    {
 		erreurs.put("numero", "Veuillez entrer un numéro de telephone correct");
 		request.setAttribute("erreurs", erreurs);
-		redirectTo = "ServletUsers?action=modification&contact="+contact;
+		redirectTo = "ServletUsers?action=modification&contact=" + contact;
+	    }
+	    else if (codePostal.length() != 6 && codePostal.length() != 0)
+	    {
+		erreurs.put("codePostal", "Veuillez entrer un code postal correct (6 chiffres)");
+		request.setAttribute("erreurs", erreurs);
+		redirectTo = "ServletUsers?action=modification&contact=" + contact;
 	    }
 	    else
 	    {
@@ -589,7 +610,7 @@ public class ServletUsers extends HttpServlet
 	{
 
 	    erreurs.clear();
-	    if(numero.length()!=10)
+	    if (numero.length() != 10)
 	    {
 		erreurs.put("numero", "Veuillez entrer un numéro de téléphone correct");
 		redirectTo = "ServletUsers?action=ajouterUnNumero";
@@ -642,75 +663,43 @@ public class ServletUsers extends HttpServlet
 //	    System.out.println("on est dans le if du post");
 	}
 
-//	else if (action.equals("creerUnUtilisateur"))
-//	{
-//	    erreurs.clear();
-////	    System.out.println("nom : "+nom+" prenom : "+prenom+" login : "+login);
-//	    if (nom.length() != 0)
-//	    {
-//		if (prenom.length() != 0)
-//		{
-//		    if (login.length() != 0)
-//		    {
-//			System.out.println("création de l'utilisateur");
-//			erreurs.clear();
-//			gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login);
-//			Collection<Utilisateur> liste = gestionnaireUtilisateurs.getAllUsers();
-//			request.setAttribute("listeDesUsers", liste);
-//			redirectTo = "ServletUsers?action=utilisateurCree";
-//		    }
-//		    else
-//		    {
-//			erreurs.put("login", "Veuillez entrer un login.");
-//			redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
-//		    }
-//		}
-//		else
-//		{
-//		    System.out.println("pas de prenom");
-//		    erreurs.put("prenom", "Veuillez entrer un prenom.");
-//		    if (login.length() == 0)
-//		    {
-//			erreurs.put("login", "Veuillez entrer un login.");
-//		    }
-//		    redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
-//		}
-//	    }
-//	    else
-//	    {
-//		System.out.println("pas de login");
-//		erreurs.put("nom", "Veuillez entrer un nom");
-//
-//		if (prenom.length() == 0)
-//		{
-//		    erreurs.put("prenom", "Veuillez entrer un prenom.");
-//		}
-//		if (login.length() == 0)
-//		{
-//		    erreurs.put("login", "Veuillez entrer un login.");
-//		}
-//
-//		redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
-//	    }
-//	}
 	// création d'un contact
 	else if (action.equals("creerUnUtilisateur"))
 	{
+
 	    System.out.println("dans le créerUnContact");
-	    Contact c = new Contact(nom, prenom);
-	    Adresse adr = new Adresse(nomRue, Integer.parseInt(codePostal), nomVille);
-	    gestionnaireContacts.ajouterAdresse(currentUser, c, adr);
-	    Telephone tel = new Telephone(numero);
-	    gestionnaireContacts.ajouterNumero(currentUser, c, tel);
-//	    gestionnaireTelephones.creerTelephone(numero);
-	    gestionnaireUtilisateurs.addContact(currentUser, c);
-	    System.out.println("done");
-	    Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);
-	    for (Contact c1 : contacts)
+
+	    erreurs.clear();
+	    if (numero.length() != 10 && numero.length() != 0)
 	    {
-		System.out.println("c : " + c1.getFirstname() + " pour l'user: " + currentUser.getLogin());
+		erreurs.put("numero", "Veuillez entrer un numéro de telephone correct");
+		request.setAttribute("erreurs", erreurs);
+		redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
 	    }
-	    redirectTo = "ServletUsers?action=utilisateurCree";
+	    else if (codePostal.length() != 6 && codePostal.length() != 0)
+	    {
+		erreurs.put("codePostal", "Veuillez entrer un code postal correct (6 chiffres)");
+		request.setAttribute("erreurs", erreurs);
+		redirectTo = "ServletUsers?action=erreurCreationUtilisateur";
+	    }
+	    else
+	    {
+		Contact c = new Contact(nom, prenom);
+
+		Adresse adr = new Adresse(nomRue, Integer.parseInt(codePostal), nomVille);
+		gestionnaireContacts.ajouterAdresse(currentUser, c, adr);
+		Telephone tel = new Telephone(numero);
+		gestionnaireContacts.ajouterNumero(currentUser, c, tel);
+//	    gestionnaireTelephones.creerTelephone(numero);
+		gestionnaireUtilisateurs.addContact(currentUser, c);
+		System.out.println("done");
+		Collection<Contact> contacts = gestionnaireContacts.getAllContact(currentUser);
+		for (Contact c1 : contacts)
+		{
+		    System.out.println("c : " + c1.getFirstname() + " pour l'user: " + currentUser.getLogin());
+		}
+		redirectTo = "ServletUsers?action=utilisateurCree";
+	    }
 	}
 
 	////////////////////////////////////////////////////////////////////////

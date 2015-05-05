@@ -111,6 +111,7 @@ public class Upload extends HttpServlet
 	    System.out.println("dans ajout photo");
 	    response.setContentType("text/html");
 	    String contact = getParamFromMultipartRequest(request, "contact");
+//	    String contact = getParamFromMultipartRequest(request, "contact");
 	    PrintWriter out = response.getWriter();
 	    Collection<Part> parts = request.getParts();
 	    for (Part part : parts)
@@ -118,7 +119,7 @@ public class Upload extends HttpServlet
 		if (part.getName().equals("fichier"))
 		{
 		    System.out.println("dans le for");
-		    if (part.getSubmittedFileName().endsWith(".jpg") || part.getSubmittedFileName().endsWith(".png"))
+		    if (part.getSubmittedFileName().endsWith(".jpg") || part.getSubmittedFileName().endsWith(".png") || part.getSubmittedFileName().endsWith(".bmp"))
 		    {
 
 			part.write(part.getSubmittedFileName());
@@ -132,8 +133,17 @@ public class Upload extends HttpServlet
 		    }
 		    else
 		    {
-			System.out.println("pas une photo");
-			redirectTo = "index.jsp?action=ajouterUnePhoto&erreurPhoto=Veuillez selectionner une photo";
+			if (getParamFromMultipartRequest(request, "action1").equals("modification"))
+			{
+			    String contactNom = getParamFromMultipartRequest(request, "contactNom");
+			    String contactPrenom = getParamFromMultipartRequest(request, "contactPrenom");
+			    redirectTo = "index.jsp?action=erreurmodifierPhoto&erreurPhoto=Veuillez selectionner une photo&contactID=" + contact+"&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+			}
+//			System.out.println("pas une photo");
+			else
+			{
+			    redirectTo = "index.jsp?action=erreurajouterUnePhoto&erreurPhoto=Veuillez selectionner une photo&contactID=" + contact;
+			}
 		    }
 		}
 	    }
@@ -155,9 +165,16 @@ public class Upload extends HttpServlet
 
     private String getParamFromMultipartRequest(HttpServletRequest request, String paramName) throws IOException, ServletException
     {
-	Part part = request.getPart(paramName);
-	Scanner scanner = new Scanner(part.getInputStream());
-	String myString = scanner.nextLine();
-	return myString;
+	if (paramName!=null)
+	{
+	    Part part = request.getPart(paramName);
+	    Scanner scanner = new Scanner(part.getInputStream());
+	    String myString = scanner.nextLine();
+	    return myString;
+	}
+	else
+	{
+	    return "";
+	}
     }
 }
