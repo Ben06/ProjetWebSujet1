@@ -16,8 +16,18 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="resources/js/kickstart.js"></script> <!-- KICKSTART -->
         <link rel="stylesheet" href="resources/css/kickstart.css" media="all" /> <!-- KICKSTART -->
+        
+        <style>
+        label
+       {
+	display: block; /* La balise devient de type block. */
+	width: 150px;
+       }
+        </style>
     </head>  
     <body>
+        
+        
         <c:choose>
             <c:when test="${param.action=='erreurInscription'}">
                 <form method="post" action="ServletUsers">
@@ -94,20 +104,22 @@
                         Vous etes connecté(e) en tant que : ${sessionScope.sessionUtilisateur.login}<br/><br/>
                         <input type="hidden" name="action" value="Deconnexion"/>
                         <!-- <input type="submit" value="Déconnexion" class="sansLabel" /> -->
-                        <button type="submit" value="Déconnexion" class="large red"><i class="fa fa-times-circle"></i> Deconnexion</button>
+                        <button type="submit" value="Déconnexion" class="medium red"><i class="fa fa-times-circle"></i> Deconnexion</button>
                         <br/>
                     </form>
                 </fieldset>
+                        </div> 
             </c:when>
             <c:when test="${param.action=='erreurConnexion'}">
+                
                 <form method="post" action="ServletUsers">
                     <fieldset>
                         <legend>Connexion</legend>
                         Vous pouvez vous connecter via ce formulaire.
                         <br/>
                         <p>
-                            <label for="nom">Login</label>
-                            <input type="login" id="login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/>
+                            <label for="nom">login</label>
+                            <input type="text" id="login" placeholder="Entrer votre login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/>
 
                             <c:if test="${!empty requestScope['erreurs']['login']}">
                                 <span style="color: #f00;">${requestScope['erreurs']['login']}</span>  
@@ -119,8 +131,8 @@
                         </p>
 
                         <p>
-                            <label for="motdepasse">Password</label>
-                            <input type="password" id="motdepasse" name="motdepasse" value="" size="20" maxlength="20" required/>
+                            <label for="motdepasse"></label>
+                            <input  id="motdepasse" placeholder="Entrer votre password" name="motdepasse" value="" size="20" maxlength="20" required/>
 
                             <c:if test="${!empty requestScope['erreurs']['password']}">
                                 <span style="color: #f00;">${requestScope['erreurs']['password']}</span>  
@@ -133,35 +145,36 @@
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="medium blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                         </p>
                         <br />
 
                     </fieldset>
                 </form>
-                <a href="ServletUsers?action=inscrireUtilisateur">Vous n'êtes pas inscrit ? Cliquez ici !</a>
+                    <h3><a href="ServletUsers?action=inscrireUtilisateur">Vous n'êtes pas inscrit ? Cliquez ici !</a></h3>
             </c:when>
             <c:when test="${param.action=='userDeconnecte' || empty sessionScope.sessionUtilisateur}">
+                
                 <form method="post" action="ServletUsers">
                     <fieldset>
                         <legend>Connexion</legend>
                         Vous pouvez vous connecter via ce formulaire.
                         <br/>
                         <p>
-                            <label for="login">Login</label>
-                            <input type="login" id="login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/><br/>
+                            <label for="nom">Login</label>
+                            <input type="text" id="login" placeholder="Entrer votre login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/>
                         </p>
 
                         <p>
                             <label for="motdepasse">Password</label>
-                            <input type="password" id="motdepasse" name="motdepasse" value="" size="20" maxlength="20" required/><br/><br/>
+                            <input  type="password" id="motdepasse" placeholder="Entrer votre password" name="motdepasse" value="" size="20" maxlength="20" required/><br/><br/>
                         </p>
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="medium blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                             <br />
                         </p>
                     </fieldset>
@@ -178,20 +191,20 @@
                         <br/>
                         <p>
                             <label for="nom">Login</label>
-                            <input type="login" id="login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/>
+                            <input type="text" id="login" placeholder="Entrer votre login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/>
                             <span style="color: #f00;">${form.erreurs['login']}</span><br/>
                         </p>
 
                         <p>
                             <label for="motdepasse">Password</label>
-                            <input type="password" id="motdepasse" name="motdepasse" value="" size="20" maxlength="20" required />
+                            <input  type="password" id="motdepasse" placeholder="Entrer votre password" name="motdepasse" value="" size="20" maxlength="20" required />
                             <span style="color: #f00;">${form.erreurs['motdepasse']}</span><br/><br/>
                         </p>
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="medium blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                             <br />
                         </p>
                     </fieldset>
@@ -204,19 +217,19 @@
                         Vous pouvez vous connecter via ce formulaire.
                         <br/>
                         <p>
-                            <label for="nom">Login</label>
-                            <input type="login" id="login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/><br/>
+                            <label for="nom"></label>
+                            <input type="text" id="login" placeholder="Entrer votre login" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/>
                         </p>
 
                         <p>
-                            <label for="motdepasse" >Password</label>
-                            <input type="password" id="motdepasse" name="motdepasse" value="" size="20" maxlength="20" required/><br/><br/>
+                            <label for="motdepasse">Password</label>
+                            <input type="password" id="login" placeholder="Entrer votre password" name="login" value="<c:out value="${utilisateur.login}"/>" size="20" maxlength="60" required/>
                         </p>
 
                         <p>
                             <input type="hidden" name="action" value="connexion"/>
-                            <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
-                            <button type="submit" class="blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
+                             <!-- <input type="submit" value="Connexion" class="sansLabel" /> -->
+                           <button type="submit" class="medium blue" value="Connexion"><i class="fa fa-user"></i> Connexion </button>
                         </p>
                         <br />
                     </fieldset>
@@ -226,16 +239,16 @@
         <br/><br/>
         <c:if test="${!empty sessionScope.sessionUtilisateur}">
             <div id="cssmenu">
-                <!--<ul class="vertical_menu">-->
-                <ul>
-                    <!--<ul>-->
+                <ul class="menu">
                     <li><a href="ServletUsers?action=listerLesUtilisateurs">Refresh</a></li>
                     <li><a href="ServletUsers?action=creationUtilisateur">Create</a></li>
                     <li><a href="ServletUsers?action=rechercheUtilisateur">Search</a></li>
                     <!--<li><a href="ServletUsers?action=mettreajourUtilisateur">Update</a></li>-->
                     <li><a href="ServletUsers?action=creerUtilisateursDeTest">Test</a></li>
                     <!--<li><a href="ServletUsers?action=supprimerAll">Delete All</a></li>-->
-                </ul> 
+                   
+                </ul>
+
             </div>
 
             <c:if test="${param.action == 'ajouterUnePhoto'}">
@@ -315,18 +328,19 @@
                         <label for="fichier">Emplacement de la photo<span class="requis">*</span></label>
                         <input type="file" id="fichier" name="fichier" accept="image/gif,image/jpeg,image/png"/> <span style="color: #f00;">${requestScope['erreurs']['photo']}</span><br/><br/>
                         <br />
+
                         <input type="hidden" name="contactNom" value="${param.contactNom}"/>
                         <input type="hidden" name="contactPrenom" value="${param.contactPrenom}"/>
+
                         <input type="hidden" name="contact" value="${param.contactID}"/>
                         <input type="hidden" name="action1" value="modification"/> 
-                        <input type="hidden" name="action" value="ajoutDePhoto"/> 
-                        <input type="submit" value="Envoyer" class="sansLabel" />
+                        <!-- <input type="submit" value="Envoyer" class="sansLabel" /> -->
+                        <button type="submit" value="Envoyer" class="green medium fa fa-picture-o"> Ajouter</button>
                         <br />                
                     </fieldset>
                 </form>
             </c:if>
-            <!--</div>-->
-            <!--</div>-->
+            
             <c:if test="${param.action == 'erreurCreationUtilisateur'}">
                 <br/>
                 <fieldset>
@@ -366,6 +380,8 @@
                 </fieldset>
             </c:if>
 
+            <!--</div>-->
+            <!--</div>-->
             <c:if test="${param.action == 'creationUtilisateur'}">
                 <br/>
                 <fieldset>
@@ -404,6 +420,8 @@
                     </form>  
                 </fieldset>
             </c:if>
+                
+                
 
             <c:if test="${param.action == 'rechercheUtilisateur'}" >
                 <br/>
@@ -439,7 +457,8 @@
                         <p>
                             <input type="hidden" name="contact" value="${param.contactID}"/> 
                             <input type="hidden" name="action" value="deleteUtilisateur"/>  
-                            <input type="submit" value="Supprimer" name="submit"/>  
+                            <!-- <input type="submit" value="Supprimer" name="submit"/> --> 
+                            <button type="submit" value="Supprimer" class="large red"><i class="fa fa-minus-square"></i> Supprimer</button>
                         </p>
                     </form>  
                 </fieldset>
@@ -530,7 +549,8 @@
                         </p>
                         <input type="hidden" name="contact" value="${param.contactID}"/> 
                         <input type="hidden" name="action" value="ajoutNumero"/>  
-                        <input type="submit" value="Ajouter le numéro" name="submit"/>  
+                       <!-- <input type="submit" value="Ajouter le numéro" name="submit"/> -->
+                        <button type="submit" value="Ajouter" class="green small fa fa-phone-square"> Ajouter</button>
                         </p>
                     </form>  
                 </fieldset>
@@ -582,7 +602,8 @@
 
                         <input type="hidden" name="contact" value="${param.contactID}"/> 
                         <input type="hidden" name="action" value="ajoutAdresse"/>  
-                        <input type="submit" value="Ajouter une adresse" name="submit"/>  
+                        <button type="submit"class="green middle" value="Ajouter une adresse" name="submit"> Ajouter une adresse </button>
+
                         </p>
                     </form>  
                 </fieldset>
@@ -603,7 +624,8 @@
                         </p>
                         <input type="hidden" name="contact" value="${param.contactID}"/> 
                         <input type="hidden" name="action" value="supprimerNumero"/>  
-                        <input type="submit" value="Supprimer le numéro" name="submit"/>  
+                       <!-- <input type="submit" value="Supprimer le numéro" name="submit"/> --> 
+                        <button type="submit" value="Supprimer le numéro" class="red small fa fa-phone-square">X</button>
                         </p>
                     </form>  
                 </fieldset>
@@ -615,6 +637,7 @@
                     <legend>Suppression d'une adresse pour le contact ${param.contactNom} ${param.contactPrenom}</legend>
                     <form action="ServletUsers" method="post">
                         <p>
+                        <p>
                             <select name="adresse">
                                 <c:forEach var="u" items="${requestScope['adressesList']}">  
                                     <option value="${u.id}">${u.nomRue}, ${u.codePostal}, ${u.nomVille}</option>
@@ -623,7 +646,8 @@
                         </p>
                         <input type="hidden" name="contact" value="${param.contactID}"/> 
                         <input type="hidden" name="action" value="supprimerAdresse"/>  
-                        <input type="submit" value="Supprimer l'adresse" name="submit"/>  
+                        <button type="submit" class="red small fa fa-book" value="SupprimerAdresse"> X</button>
+                        
                         </p>
                     </form>  
                 </fieldset>
@@ -642,9 +666,7 @@
             <!--            <br/>
                         <span class="resultat">Tous les utilisateurs ont été supprimés !</span>-->
             <%--</c:if>--%>
-
-
-
+            
             <c:if test="${param.action=='adresseAjoutee'}">
                 <br/>
                 <span class="resultat">Adresse crée !</span>
@@ -693,7 +715,7 @@
             <c:if test="${param.action == 'listerLesUtilisateurs'}" >  
                 <!--<h2>Resultat de la recherche</h2>-->  
                 <c:if test = "${requestScope['listeDesUsers'] != null}">
-                    <table classe="sortable" border="4">  
+                     <table classe="sortable" border="4">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
                             <td><b>Nom</b></td>  
@@ -701,7 +723,7 @@
                             <td><b>Photo</b></td>
                             <td><b>Telephone</b></td>
                             <td><b>Adresse</b></td>
-                            <td><b>Suppresion</b></td>
+                             <td><b>Suppression</b></td>
                             <td><b>Modification</b></td>
                             <!--<td><b>Telephone</b></td>-->
                         </tr>  
@@ -719,7 +741,8 @@
                                         <form action="ServletUsers" method="get">
                                             <input type="hidden" name="contact" value="${u.id}"/>
                                             <input type="hidden" name="action" value="ajouterUnePhoto"/>  
-                                            <input type="submit" value="Ajouter" name="submit"/>
+                                            <!-- <input type="submit" value="Envoyer" class="sansLabel" /> -->
+                                            <button type="submit" value="Envoyer" class="green medium fa fa-picture-o"> Ajouter</button>
                                         </form>
                                     </td>
                                 </c:if>
@@ -739,7 +762,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="supprimerUnNumero"/>  
-                                        <input type="submit" value="X" name="submit"/>
+                                        <!-- <input type="submit" value="X" name="submit"/> -->
+                                        <button type="submit" value="SupprimerunNumero" class="small fa fa-phone-square red"> X</button>
                                     </form>
 
                                     <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
@@ -748,7 +772,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="ajouterUnNumero"/>  
-                                        <input type="submit" value="Ajouter" name="submit"/>
+                                        <!-- <input type="submit" value="Ajouter" name="submit"/> -->
+                                        <button type="submit" value="Ajouter" class=" green small fa fa-phone-square"> Ajouter</button>
                                     </form>
                                     <%--</c:if>--%>
                                 </td>
@@ -763,8 +788,8 @@
                                         <input type="hidden" name="contact" value="${u.id}"/>
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
-                                        <input type="hidden" name="action" value="supprimerUneAdresse"/>  
-                                        <input type="submit" value="X" name="submit"/>
+                                       <!-- <input type="hidden" name="action" value="supprimerUneAdresse"/>  -->
+                                        <button type="submit" value="SupprimerUneAdresse" class="small red"><i class="fa fa-book"></i> X</button>
                                     </form>
 
                                     <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
@@ -773,7 +798,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="ajouterUneAdresse"/>  
-                                        <input type="submit" value="Ajouter" name="submit"/>
+                                        <!-- <input type="submit" value="Ajouter" name="submit"/> -->
+                                        <button type="submit" value="Ajouter" class="green small fa fa-book"> Ajouter</button>
                                     </form>
                                     <%--</c:if>--%>
                                 </td>
@@ -783,7 +809,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="suppression"/>  
-                                        <input type="submit" value="Supprimer" name="submit"/>
+                                       <!--  <input type="submit" value="Supprimer" name="submit"/> -->
+                                        <button type="submit" value="Supprimer" class="large red square"><i class="fa fa-minus-square"></i> Supprimer Contact</button>
                                     </form>
                                 </td>
 
@@ -793,7 +820,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="modification"/>  
-                                        <input type="submit" value="Modifier" name="submit"/>
+                                        <!-- <input type="submit" value="Modifier" name="submit"/> -->
+                                        <button class="large orange pill"><i class="fa fa-wrench"></i> Modifier</button>
                                     </form>
                                 </td>
                                 <!-- On compte le nombre de users -->  
@@ -806,7 +834,7 @@
                                     <c:if test="${param.page > 0}">
                                         <form action="ServletUsers" method="get">  
                                             <input type="hidden" name="action" value="Previous"/>  
-                                            <input type="submit" value="Précédente" name="submit"/>  
+                                            <button type="submit" class='medium blue' value="Précèdente" name="submit"> Précèdente </button>  
                                         </form>
                                     </c:if>
                                 </b>
@@ -817,7 +845,7 @@
                                     <c:if test="${param.page < param.lastPage-1}">
                                         <form action="ServletUsers" method="get">   
                                             <input type="hidden" name="action" value="Next"/>  
-                                            <input type="submit" value="Suivante" name="submit"/>  
+                                            <button type="submit" class='medium blue' value="Suivante" name="submit"> Suivante </button>
                                         </form>
                                     </c:if>
                                 </b>
@@ -834,7 +862,7 @@
             <c:if test="${param.action == 'chercherParLogin'}" >  
                 <!--<h2>Resultat de la recherche</h2>-->  
                 <c:if test = "${requestScope['listeDesUsers'] != null}">
-                    <table classe="sortable" border="4">  
+                     <table classe="sortable" border="4">  
                         <!-- La ligne de titre du tableau des comptes -->  
                         <tr>  
                             <td><b>Nom</b></td>  
@@ -842,7 +870,7 @@
                             <td><b>Photo</b></td>
                             <td><b>Telephone</b></td>
                             <td><b>Adresse</b></td>
-                            <td><b>Suppresion</b></td>
+                             <td><b>Suppression</b></td>
                             <td><b>Modification</b></td>
                             <!--<td><b>Telephone</b></td>-->
                         </tr>  
@@ -860,7 +888,8 @@
                                         <form action="ServletUsers" method="get">
                                             <input type="hidden" name="contact" value="${u.id}"/>
                                             <input type="hidden" name="action" value="ajouterUnePhoto"/>  
-                                            <input type="submit" value="Ajouter" name="submit"/>
+                                           <!-- <input type="submit" value="Envoyer" class="sansLabel" /> -->
+                                           <button type="submit" value="Envoyer" class="green medium fa fa-picture-o"> Ajouter</button>
                                         </form>
                                     </td>
                                 </c:if>
@@ -880,7 +909,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="supprimerUnNumero"/>  
-                                        <input type="submit" value="X" name="submit"/>
+                                       <!-- <input type="submit" value="X" name="submit"/> -->
+                                        <button type="submit" value="SupprimerUnNumero" class="small fa fa-phone-square red"> X</button>
                                     </form>
 
                                     <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
@@ -889,7 +919,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="ajouterUnNumero"/>  
-                                        <input type="submit" value="Ajouter" name="submit"/>
+                                        <!-- <input type="submit" value="Ajouter" name="submit"/> -->
+                                        <button type="submit" value="Ajouter" class="green small fa fa-phone-square"> Ajouter</button>
                                     </form>
                                     <%--</c:if>--%>
                                 </td>
@@ -904,8 +935,9 @@
                                         <input type="hidden" name="contact" value="${u.id}"/>
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
-                                        <input type="hidden" name="action" value="supprimerUneAdresse"/>  
-                                        <input type="submit" value="X" name="submit"/>
+                                        
+                                       <!-- <input type="submit" value="X" name="submit"/> -->
+                                        <button type="submit" value="SupprimerUneAdresse" class="small red"><i class="fa fa-minus-square"></i> X</button>
                                     </form>
 
                                     <%--<c:if test = "${requestScope['phonesOf'.concat(id)] == null}">--%>
@@ -914,7 +946,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="ajouterUneAdresse"/>  
-                                        <input type="submit" value="Ajouter" name="submit"/>
+                                        <!-- <input type="submit" value="Ajouter" name="submit"/> -->
+                                        <button type="submit" value="Ajouter" class="green small fa fa-book"> Ajouter</button>
                                     </form>
                                     <%--</c:if>--%>
                                 </td>
@@ -924,7 +957,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="suppression"/>  
-                                        <input type="submit" value="Supprimer" name="submit"/>
+                                        <!-- <input type="submit" value="Supprimer" name="submit"/> -->
+                                        <button type="submit" value="Suppression" class="large red square"><i class="fa fa-minus-square"></i> Supprimer Contact</button>
                                     </form>
                                 </td>
 
@@ -934,7 +968,8 @@
                                         <input type="hidden" name="contactNom" value="${u.firstname}"/>
                                         <input type="hidden" name="contactPrenom" value="${u.lastname}"/>
                                         <input type="hidden" name="action" value="modification"/>  
-                                        <input type="submit" value="Modifier" name="submit"/>
+                                        <!-- <input type="submit" value="Modifier" name="submit"/> -->
+                                        <button class="large orange pill"><i class="fa fa-wrench"></i> Modifier</button>
                                     </form>
                                 </td>
                                 <!-- On compte le nombre de users -->  
@@ -947,7 +982,7 @@
                                     <c:if test="${param.page > 0}">
                                         <form action="ServletUsers" method="get">  
                                             <input type="hidden" name="action" value="Previous"/>  
-                                            <input type="submit" value="Précédente" name="submit"/>  
+                                            <button type="submit" class='medium blue' value="Précèdente" name="submit"> Précèdente </button> 
                                         </form>
                                     </c:if>
                                 </b>
@@ -958,7 +993,7 @@
                                     <c:if test="${param.page < param.lastPage-1}">
                                         <form action="ServletUsers" method="get">   
                                             <input type="hidden" name="action" value="Next"/>  
-                                            <input type="submit" value="Suivante" name="submit"/>  
+                                            <button type="submit" class='medium blue' value="Suivante" name="submit"> Suivante </button>
                                         </form>
                                     </c:if>
                                 </b>
