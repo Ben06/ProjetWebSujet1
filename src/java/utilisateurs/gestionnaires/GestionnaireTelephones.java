@@ -43,8 +43,8 @@ public class GestionnaireTelephones
     public Collection<Telephone> creerTelephonesTest()
     {
 	Collection<Telephone> tels = new ArrayList<>();
-	tels.add(creerTelephone(generateRandomNumber()));
-	tels.add(creerTelephone(generateRandomNumber()));
+	tels.add(new Telephone(generateRandomNumber()));
+	tels.add(new Telephone(generateRandomNumber()));
 	return tels;
     }
 

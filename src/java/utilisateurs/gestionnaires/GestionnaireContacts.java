@@ -27,26 +27,27 @@ public class GestionnaireContacts
     @PersistenceContext
     private EntityManager em;
 
-    private String generateRandomString() {
-        Random r = new Random();
-        String randomString = "";
+    private String generateRandomString()
+    {
+	Random r = new Random();
+	String randomString = "";
 
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-        for (int i = 0; i < 8; i++) {
-            randomString += alphabet.charAt(r.nextInt(alphabet.length()));
-        }
-        
-        return randomString;
+	String alphabet = "abcdefghijklmnopqrstuvwxyz";
+	for (int i = 0; i < 8; i++)
+	{
+	    randomString += alphabet.charAt(r.nextInt(alphabet.length()));
+	}
+
+	return randomString;
     }
-    
-    
+
     public Collection<Contact> creerContactDeTest()
     {
 	System.out.println("creation des contacts de test");
 	Collection<Contact> contacts = new ArrayList<>();
-	for(int i=0; i<30; i++)
+	for (int i = 0; i < 30; i++)
 	{
-	    contacts.add(creerContact(generateRandomString(), generateRandomString()));
+	    contacts.add(new Contact(generateRandomString(), generateRandomString()));
 	}
 	return contacts;
     }
@@ -254,7 +255,7 @@ public class GestionnaireContacts
 	{
 	    System.out.println("contact trouvé : " + c.getFirstname());
 	    c.setPictureName(name);
-	    em.persist(u);
+//	    em.persist(u);
 	}
     }
 
@@ -274,11 +275,11 @@ public class GestionnaireContacts
 		    if (toDelete.getId() == c.getId())
 		    {
 			liste.remove(toDelete);
-//			em.remove(toDelete);
+			em.remove(toDelete);
 		    }
 		}
 		u.setContacts(liste);
-		em.persist(u);
+//		em.persist(u);
 //		em.remove(c);
 		System.out.println("done...");
 	    }
@@ -301,18 +302,18 @@ public class GestionnaireContacts
 
 	if (id != "" || id != null)
 	{
-	    System.out.println("recherche du contact à update");
-
+	    System.out.println("recherche du contact à update codePostal.length():" + codePostal.length());
+//	    System.out.println();
 	    Collection<Contact> contacts = getContactByID(u, id);
 	    for (Contact contact : contacts)
 	    {
 		System.out.println("trouvé!");
 		c = contact;
-		if (newNom.length()!=0)
+		if (newNom.length() != 0)
 		{
 		    c.setFirstname(newNom);
 		}
-		if(newPrenom.length()!=0)
+		if (newPrenom.length() != 0)
 		{
 		    c.setLastname(newPrenom);
 		}
@@ -322,24 +323,35 @@ public class GestionnaireContacts
 		    Collection<Adresse> adresses = contact.getAdresses();
 		    for (Adresse adr : adresses)
 		    {
+			System.out.println("on cherche l'adresse à moodifier, adr id = " + adr.getId() + " adresse : " + adresseId);
 			if (adr.getId() == Integer.parseInt(adresseId))
 			{
-			    if (nomRue != "" || nomRue.length()!=0)
+			    System.out.println("trouvée");
+			    if (nomRue != "" || nomRue.length() != 0)
 			    {
-				System.out.println("nouveau nom de rue : "+nomRue);
-				adr.setNomRue(nomRue);
+				System.out.println("nouveau nom de rue : " + nomRue);
+				if (nomRue.length() != 0)
+				{
+				    adr.setNomRue(nomRue);
+				}
 			    }
 
-			    if (codePostal != "" || codePostal.length()!=0)
+			    if (codePostal != "" || codePostal.length() != 0)
 			    {
-				System.out.println("nouveau cp : "+codePostal);
-				adr.setCodePostal(Integer.parseInt(codePostal));
+				System.out.println("nouveau cp: " + codePostal);
+				if (codePostal.length() != 0)
+				{
+				    adr.setCodePostal(Integer.parseInt(codePostal));
+				}
 			    }
 
-			    if (nomVille != "" || nomVille.length()!=0)
+			    if (nomVille != "" || nomVille.length() != 0)
 			    {
-				System.out.println("nouveau nom de ville : "+nomVille);
-				adr.setNomVille(nomVille);
+				System.out.println("nouveau nom de ville : " + nomVille);
+				if (nomVille.length() != 0)
+				{
+				    adr.setNomVille(nomVille);
+				}
 			    }
 			}
 			c.setAdresses(adresses);
@@ -354,19 +366,21 @@ public class GestionnaireContacts
 		    {
 			if (tel.getId() == Integer.parseInt(phoneId))
 			{
-			    if (numero != "" || numero.length()!=0)
+			    if (numero != "" || numero.length() != 0)
 			    {
-				tel.setNumero(numero);
+				if (numero.length() != 0)
+				{
+				    tel.setNumero(numero);
+				}
 			    }
 			}
 			c.setPhone(tels);
 		    }
 		    System.out.println("done");
 		}
-		em.persist(u);
+//		em.persist(c);
 		System.out.println("modification terminée");
 		return true;
-
 	    }
 
 	}
@@ -409,8 +423,14 @@ public class GestionnaireContacts
     public void ajouterNumero(Utilisateur u, Contact c, Telephone numero)
     {
 	System.out.println("ajout du numéro au contact");
-	c.getPhone().add(numero);
-	em.persist(c);
+	Collection<Telephone> tels = c.getPhone();
+//	c.getPhone().add(numero);
+	em.persist(numero);
+
+	tels.add(numero);
+	c.setPhone(tels);
+
+//	em.persist(c);
 	System.out.println("numéro ajouté! ");
 //	for (Telephone tel : c.getPhone())
 //	{
@@ -424,8 +444,12 @@ public class GestionnaireContacts
     public void ajouterAdresse(Utilisateur u, Contact c, Adresse adr)
     {
 	System.out.println("ajout d'une adresse au contact");
-	c.getAdresses().add(adr);
-	em.persist(c);
+	Collection<Adresse> adddrs = c.getAdresses();
+	em.persist(adr);
+	adddrs.add(adr);
+	c.setAdresses(adddrs);
+//	em.persist(c);
+
 	System.out.println("adresse ajoutée! ");
 //	for (Telephone tel : c.getPhone())
 //	{
@@ -434,6 +458,11 @@ public class GestionnaireContacts
 //	    
 //	}
 
+    }
+
+    public void persists(Contact c)
+    {
+	em.persist(c);
     }
 
 }

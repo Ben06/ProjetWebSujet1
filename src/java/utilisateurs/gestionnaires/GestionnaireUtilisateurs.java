@@ -222,21 +222,30 @@ public class GestionnaireUtilisateurs
 	    return false;
 	}
     }
-    
+
     public void addContact(Utilisateur u, Contact contact)
     {
 	System.out.println("ajout de contacts");
-//	Contact c = new Contact("jean", "merde");
-//	contact.setUtilisateur(u);
-	u.getContacts().add(contact);
-//	contacts.add(c);
-//	u.setContacts(contacts);
-//	deleteUser(u.getLogin());
+	Collection<Contact> contacts = u.getContacts();
 //	em.persist(contact);
-	
+	contacts.add(contact);
+	u.setContacts(contacts);
+//	u.getContacts().add(contact);
+//	em.flush();
+//	em.refresh(u);
+	// crée un autre contact, fixer cette partie
+//	Utilisateur u1 = creeUtilisateur(u.getFirstname(), u.getLastname(), u.getLogin(), u.getPassword());
+//	u1.setContacts(u.getContacts());
+//	em.remove(u);
+//	Utilisateur u = new Utilisateur(login, nom, prenom, password, path);
 	em.persist(u);
 	System.out.println("contact ajouté!");
     }
+
+//    public void persists(Utilisateur u)
+//    {
+//	em.persist(u);
+//    }
 
 //    public void addContactest()
 //    {

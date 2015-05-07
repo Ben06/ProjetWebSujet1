@@ -43,7 +43,7 @@ public class Utilisateur implements Serializable
 
 //    @OneToMany(cascade =
 //    {
-//	CascadeType.PERSIST
+//	CascadeType.ALL
 //    }, fetch = FetchType.EAGER)
     public Collection<Contact> getContacts()
     {

@@ -57,8 +57,8 @@ public class GestionnaireAdresses
     public Collection<Adresse> creerAdresseTest()
     {
 	Collection<Adresse> adr = new ArrayList<>();
-	adr.add(creerAdresse(generateRandomString(), Integer.parseInt(generateRandomNumber()), generateRandomString()));
-	adr.add(creerAdresse(generateRandomString(), Integer.parseInt(generateRandomNumber()), generateRandomString()));
+	adr.add(new Adresse(generateRandomString(), Integer.parseInt(generateRandomNumber()), generateRandomString()));
+	adr.add(new Adresse(generateRandomString(), Integer.parseInt(generateRandomNumber()), generateRandomString()));
 	return adr;
     }
 

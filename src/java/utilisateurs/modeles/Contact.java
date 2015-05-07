@@ -85,7 +85,10 @@ public class Contact implements Serializable
 //    {
 //	this.numeros = numeros;
 //    }
-
+//    @OneToMany(cascade =
+//    {
+//	CascadeType.ALL
+//    }, fetch = FetchType.EAGER)
     public Collection<Adresse> getAdresses()
     {
 	return adresses;
@@ -96,6 +99,10 @@ public class Contact implements Serializable
 	this.adresses = adresses;
     }
 
+//    @OneToMany(cascade =
+//    {
+//	CascadeType.ALL
+//    }, fetch = FetchType.EAGER)
     public Collection<Telephone> getPhone()
     {
 	return this.numeros;
@@ -166,6 +173,7 @@ public class Contact implements Serializable
 	this.firstname = firstname;
     }
 
+    @Id
     public int getId()
     {
 	return id;
