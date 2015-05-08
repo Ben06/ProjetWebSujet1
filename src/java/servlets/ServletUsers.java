@@ -358,6 +358,7 @@ public class ServletUsers extends HttpServlet
 			gestionnaireContacts.ajouterAdresse(currentUser, c, a);
 		    }
 		    gestionnaireUtilisateurs.addContact(currentUser, c);
+		    gestionnaireContacts.persists(c);
 		}
 
 		for (Contact c : contacts)
@@ -735,15 +736,7 @@ public class ServletUsers extends HttpServlet
 	    else
 	    {
 		System.out.println("nouvelles valeurs : "+adresse+" "+telephone+" "+nomRue+" "+nomVille+" "+codePostal+" "+numero);
-		boolean res = gestionnaireContacts.updateContact(currentUser, contact, nom, prenom, adresse, telephone, nomRue, nomVille, codePostal, numero);
-		if (res)
-		{
-		    redirectTo = "ServletUsers?action=utilisateurMisAJour";
-		}
-		else
-		{
-		    redirectTo = "ServletUsers?action=erreurMiseAJour";
-		}
+		gestionnaireContacts.updateContact(currentUser, contact, nom, prenom, adresse, telephone, nomRue, nomVille, codePostal, numero);
 	    }
 	}
 
@@ -854,7 +847,7 @@ public class ServletUsers extends HttpServlet
 		gestionnaireContacts.ajouterAdresse(currentUser, c, adr);
 		Telephone tel = new Telephone(numero);
 		gestionnaireContacts.ajouterNumero(currentUser, c, tel);
-		gestionnaireContacts.persists(c);
+//		gestionnaireContacts.persists(c);
 //	    gestionnaireTelephones.creerTelephone(numero);
 		gestionnaireUtilisateurs.addContact(currentUser, c);
 //		gestionnaireContacts.persists(c);
