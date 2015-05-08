@@ -23,35 +23,35 @@ import utilisateurs.modeles.Utilisateur;
 @Stateless
 public class GestionnaireContacts
 {
-    
+
     @PersistenceContext
     private EntityManager em;
-    
+
     private String generateRandomString()
     {
 	Random r = new Random();
 	String randomString = "";
-	
+
 	String alphabet = "abcdefghijklmnopqrstuvwxyz";
 	for (int i = 0; i < 8; i++)
 	{
 	    randomString += alphabet.charAt(r.nextInt(alphabet.length()));
 	}
-	
+
 	return randomString;
     }
-    
+
     public Collection<Contact> creerContactDeTest()
     {
 	System.out.println("creation des contacts de test");
 	Collection<Contact> contacts = new ArrayList<>();
 	for (int i = 0; i < 30; i++)
 	{
-	    contacts.add(new Contact(generateRandomString(), generateRandomString()));
+	    contacts.add(creerContact(generateRandomString(), generateRandomString()));
 	}
 	return contacts;
     }
-    
+
     public Contact creerContact(String nom, String prenom, String pictureName)
     {
 	System.out.println("creation d'un contact");
@@ -60,16 +60,16 @@ public class GestionnaireContacts
 	em.persist(c);
 	return c;
     }
-    
+
     public Contact creerContact(String nom, String prenom)
     {
 	System.out.println("creation d'un contact");
 	Contact c = new Contact(nom, prenom);
 	System.out.println("avan le em.persist(c)");
-//	em.persist(c);
+	em.persist(c);
 	return c;
     }
-    
+
     public Collection<Contact> getAllContact(Utilisateur u)
     {
 	System.out.println("dans le get All contact");
@@ -83,7 +83,7 @@ public class GestionnaireContacts
 //	return q.getResultList();
 	return u.getContacts();
     }
-    
+
     public Collection<Contact> getTenContacts(int pageNumber, Utilisateur u)
     {
 	// Exécution d'une requête équivalente à un select *  
@@ -107,7 +107,7 @@ public class GestionnaireContacts
 	}
 	return liste10;
     }
-    
+
     public Collection<Contact> getContact(Utilisateur u, String toSearch, String option)
     {
 //        System.out.println("login : "+login);
@@ -176,7 +176,7 @@ public class GestionnaireContacts
 		}
 	    }
 	}
-	
+
 	return result;
 
 //	Query q = em.createQuery("select c from Contact c where c.firstname=:firstname");
@@ -211,7 +211,7 @@ public class GestionnaireContacts
 		    result.add(c);
 		}
 	    }
-	    
+
 	    return result;
 	}
 	else
@@ -219,7 +219,7 @@ public class GestionnaireContacts
 	    return null;
 	}
     }
-    
+
     public Contact getSingleContactByID(Utilisateur u, String stringId)
     {
 	System.out.println("getContactById id : " + stringId);
@@ -237,12 +237,12 @@ public class GestionnaireContacts
 	}
 	return c;
     }
-    
+
     public void ajouterPhoto(Utilisateur u, String id, String name)
     {
 	System.out.println("ajout d'une photo pour le contact d'id : " + id);
 	Contact c = null;
-	
+
 	if (id != "")
 	{
 	    Collection<Contact> contacts = getContactByID(u, id);
@@ -258,9 +258,9 @@ public class GestionnaireContacts
 		}
 	    }
 	}
-	
+
     }
-    
+
     public boolean deleteContact(Utilisateur u, String id)
     {
 	System.out.println("dans le delete Contact");
@@ -271,7 +271,7 @@ public class GestionnaireContacts
 	    for (Contact c : contacts)
 	    {
 		System.out.println("Suppression du contact : " + c.getFirstname());
-		
+
 		for (Contact toDelete : liste)
 		{
 		    if (toDelete.getId() == c.getId())
@@ -297,112 +297,115 @@ public class GestionnaireContacts
 	    return true;
 	}
     }
-    
+
     public void updateContact(Utilisateur u, String id, String newNom, String newPrenom, String adresseId, String phoneId, String nomRue, String nomVille, String codePostal, String numero)
     {
-	
+
 	Contact c;
-	
+
 	if (id != "" || id != null)
 	{
 	    System.out.println("recherche du contact à update codePostal.length():" + codePostal.length());
 //	    System.out.println();
-	    Collection<Contact> contacts = getContactByID(u, id);
+	    Collection<Contact> contacts = getAllContact(u);
 	    for (Contact contact : contacts)
 	    {
-		System.out.println("trouvé!");
-		c = contact;
-		if (newNom.length() != 0)
+		if (contact.getId() == Integer.parseInt(id))
 		{
-		    c.setFirstname(newNom);
-		}
-		if (newPrenom.length() != 0)
-		{
-		    c.setLastname(newPrenom);
-		}
-		if (adresseId != "" || adresseId != null)
-		{
+		    System.out.println("trouvé!");
+		    c = contact;
+		    if (newNom.length() != 0)
+		    {
+			c.setFirstname(newNom);
+		    }
+		    if (newPrenom.length() != 0)
+		    {
+			c.setLastname(newPrenom);
+		    }
+		    if (adresseId != "" || adresseId != null)
+		    {
 //		    System.out.println("modification de l'adresse nouvelle adresse : "+);
-		    Collection<Adresse> adresses = contact.getAdresses();
-		    for (Adresse adr : adresses)
-		    {
-			System.out.println("on cherche l'adresse à moodifier, adr id = " + adr.getId() + " adresse : " + adresseId);
-			if (adr.getId() == Integer.parseInt(adresseId))
+			Collection<Adresse> adresses = contact.getAdresses();
+			for (Adresse adr : adresses)
 			{
-			    System.out.println("trouvée");
-			    if (nomRue != "" || nomRue.length() != 0)
+			    System.out.println("on cherche l'adresse à moodifier, adr id = " + adr.getId() + " adresse : " + adresseId);
+			    if (adr.getId() == Integer.parseInt(adresseId))
 			    {
-				System.out.println("nouveau nom de rue : " + nomRue);
-				if (nomRue.length() != 0)
+				System.out.println("trouvée");
+				if (nomRue != "" || nomRue.length() != 0)
 				{
-				    adr.setNomRue(nomRue);
+				    System.out.println("nouveau nom de rue : " + nomRue);
+				    if (nomRue.length() != 0)
+				    {
+					adr.setNomRue(nomRue);
+				    }
+				}
+
+				if (codePostal != "" || codePostal.length() != 0)
+				{
+				    System.out.println("nouveau cp: " + codePostal);
+				    if (codePostal.length() != 0)
+				    {
+					adr.setCodePostal(Integer.parseInt(codePostal));
+				    }
+				}
+
+				if (nomVille != "" || nomVille.length() != 0)
+				{
+				    System.out.println("nouveau nom de ville : " + nomVille);
+				    if (nomVille.length() != 0)
+				    {
+					adr.setNomVille(nomVille);
+				    }
 				}
 			    }
-			    
-			    if (codePostal != "" || codePostal.length() != 0)
-			    {
-				System.out.println("nouveau cp: " + codePostal);
-				if (codePostal.length() != 0)
-				{
-				    adr.setCodePostal(Integer.parseInt(codePostal));
-				}
-			    }
-			    
-			    if (nomVille != "" || nomVille.length() != 0)
-			    {
-				System.out.println("nouveau nom de ville : " + nomVille);
-				if (nomVille.length() != 0)
-				{
-				    adr.setNomVille(nomVille);
-				}
-			    }
+			    c.setAdresses(adresses);
 			}
-			c.setAdresses(adresses);
+			System.out.println("done");
 		    }
-		    System.out.println("done");
-		}
-		if (phoneId != "" || phoneId != null)
-		{
-		    System.out.println("modification du telephone");
-		    Collection<Telephone> tels = contact.getPhone();
-		    for (Telephone tel : tels)
+		    if (phoneId != "" || phoneId != null)
 		    {
-			if (tel.getId() == Integer.parseInt(phoneId))
+			System.out.println("modification du telephone");
+			Collection<Telephone> tels = contact.getPhone();
+			for (Telephone tel : tels)
 			{
-			    if (numero != "" || numero.length() != 0)
+			    if (tel.getId() == Integer.parseInt(phoneId))
 			    {
-				if (numero.length() != 0)
+				if (numero != "" || numero.length() != 0)
 				{
-				    tel.setNumero(numero);
+				    if (numero.length() != 0)
+				    {
+					tel.setNumero(numero);
+				    }
 				}
 			    }
+			    c.setPhone(tels);
 			}
-			c.setPhone(tels);
+			System.out.println("done");
 		    }
-		    System.out.println("done");
-		}
-		em.persist(c);
+		    em.persist(c);
 //		Contact c1 = c;
 //		em.persist(c1);
 //		u.getContacts().remove(c);
 //		em.remove(contact);
 //		em.persist(c);
-		u.setContacts(contacts);
-		em.persist(u);
-		System.out.println("modification terminée");
+		    u.setContacts(contacts);
+		    em.persist(u);
+		    System.out.println("modification terminée");
 //		return c;
+		}
 	    }
-	    
+
 	}
 //	return null;
     }
-    
+
     public void ajouterNumero(Utilisateur u, Contact c, Telephone numero)
     {
 	System.out.println("ajout du numéro au contact");
 	Collection<Telephone> tels = c.getPhone();
 	tels.add(numero);
-	
+
 	Collection<Contact> contacts = getAllContact(u);
 	for (Contact c1 : contacts)
 	{
@@ -414,9 +417,9 @@ public class GestionnaireContacts
 	    }
 	}
 	System.out.println("numéro ajouté! ");
-	
+
     }
-    
+
     public void ajouterAdresse(Utilisateur u, Contact c, Adresse adr)
     {
 	System.out.println("ajout d'une adresse au contact");
@@ -437,12 +440,12 @@ public class GestionnaireContacts
 	    }
 	}
 	System.out.println("adresse ajoutée! ");
-	
+
     }
-    
+
     public void persists(Contact c)
     {
 	em.persist(c);
     }
-    
+
 }

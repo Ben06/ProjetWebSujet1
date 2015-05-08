@@ -731,11 +731,11 @@ public class ServletUsers extends HttpServlet
 	    {
 		erreurs.put("codePostal", "Veuillez entrer un code postal correct (6 chiffres)");
 		request.setAttribute("erreurs", erreurs);
-		redirectTo = "ServletUsers?action=modification&contact=" + contact+ "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
+		redirectTo = "ServletUsers?action=modification&contact=" + contact + "&contactNom=" + contactNom + "&contactPrenom=" + contactPrenom;
 	    }
 	    else
 	    {
-		System.out.println("nouvelles valeurs : "+adresse+" "+telephone+" "+nomRue+" "+nomVille+" "+codePostal+" "+numero);
+		System.out.println("nouvelles valeurs : " + adresse + " " + telephone + " " + nomRue + " " + nomVille + " " + codePostal + " " + numero);
 		gestionnaireContacts.updateContact(currentUser, contact, nom, prenom, adresse, telephone, nomRue, nomVille, codePostal, numero);
 	    }
 	}
@@ -973,6 +973,21 @@ public class ServletUsers extends HttpServlet
 			    else
 			    {
 				Utilisateur u = gestionnaireUtilisateurs.creeUtilisateur(nom, prenom, login, password);
+				Collection<Contact> contacts = gestionnaireContacts.creerContactDeTest();
+				for (Contact c : contacts)
+				{
+				    Collection<Telephone> tels = gestionnaireTelephones.creerTelephonesTest();
+				    for (Telephone t : tels)
+				    {
+					gestionnaireContacts.ajouterNumero(u, c, t);
+				    }
+				    Collection<Adresse> adrs = gestionnaireAdresses.creerAdresseTest();
+				    for (Adresse a : adrs)
+				    {
+					gestionnaireContacts.ajouterAdresse(u, c, a);
+				    }
+				}
+				gestionnaireUtilisateurs.addContactsTest(u, contacts);
 				redirectTo = "ServletUsers?action=utilisateurInscrit";
 			    }
 			}

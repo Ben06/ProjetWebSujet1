@@ -70,6 +70,8 @@ public class GestionnaireUtilisateurs
 	Utilisateur u = new Utilisateur(login, nom, prenom, password);
 	System.out.println("utilisateur crée u : " + u.getLogin());
 	System.out.println("user null ? : " + u.getPassword());
+	//création des contacts de test
+
 	em.persist(u);
 	return u;
     }
@@ -223,21 +225,22 @@ public class GestionnaireUtilisateurs
 	}
     }
 
+    public void addContactsTest(Utilisateur u, Collection<Contact> contacts)
+    {
+//	System.out.println("ajout de contacts");
+	u.setContacts(contacts);
+	em.persist(u);
+//	System.out.println("contact ajouté!");
+    }
+
     public void addContact(Utilisateur u, Contact contact)
     {
 	System.out.println("ajout de contacts");
 	Collection<Contact> contacts = u.getContacts();
-//	em.persist(contact);
+
 	contacts.add(contact);
 	u.setContacts(contacts);
-//	u.getContacts().add(contact);
-//	em.flush();
-//	em.refresh(u);
-	// crée un autre contact, fixer cette partie
-//	Utilisateur u1 = creeUtilisateur(u.getFirstname(), u.getLastname(), u.getLogin(), u.getPassword());
-//	u1.setContacts(u.getContacts());
-//	em.remove(u);
-//	Utilisateur u = new Utilisateur(login, nom, prenom, password, path);
+
 	em.persist(u);
 	System.out.println("contact ajouté!");
     }
@@ -247,25 +250,4 @@ public class GestionnaireUtilisateurs
 //	em.persist(u);
 //    }
 
-//    public void addContactest()
-//    {
-////	Utilisateur u = creeUtilisateur("Reale", "Benjamin", "breale");
-//	
-//	System.out.println("ajout de contacts");
-////	Contact c = new Contact("jean", "merde");
-//	Collection<Contact> contacts = new ArrayList<Contact>();
-//
-//	if (u.getContacts() != null)
-//	{
-//	    System.out.println("contacts null");
-//	    contacts = u.getContacts();
-//	}
-//	
-//	contacts.add(c);
-//	u.setContacts(contacts);
-//
-//	System.out.println("contact ajouté!");
-//
-//	em.persist(u);
-//    }
 }
